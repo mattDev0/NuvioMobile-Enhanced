@@ -318,7 +318,9 @@ fun runtimeConfigBoolean(key: String, default: Boolean): Boolean =
 
 val generateRuntimeConfigs = tasks.register<GenerateRuntimeConfigsTask>("generateRuntimeConfigs") {
     outputDir.set(generatedRuntimeConfigDir)
-    localPropertiesFile.set(rootProject.layout.projectDirectory.file("local.properties"))
+    rootProject.layout.projectDirectory.file("local.properties")
+        .takeIf { it.asFile.exists() }
+        ?.let { localPropertiesFile.set(it) }
     appVersionName.set(releaseAppVersionName)
     appVersionCode.set(releaseAppVersionCode)
     supabaseUrl.set(runtimeConfigValue("NUVIO_SUPABASE_URL"))
