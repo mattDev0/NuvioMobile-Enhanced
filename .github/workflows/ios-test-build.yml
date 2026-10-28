@@ -23,7 +23,7 @@ jobs:
   build:
     name: Build unsigned full ${{ inputs.configuration }} IPA
     runs-on: xcode-27
-    timeout-minutes: ${{ inputs.configuration == 'Release' && 180 || 30 }}
+    timeout-minutes: ${{ inputs.configuration == 'Release' && 180 || 60 }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.1.app/Contents/Developer
       GRADLE_OPTS: -Dfile.encoding=UTF-8
@@ -46,6 +46,8 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: false
 
       - name: Cache Kotlin Native
         uses: actions/cache@v5
