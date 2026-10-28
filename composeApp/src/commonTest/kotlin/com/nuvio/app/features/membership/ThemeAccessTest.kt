@@ -70,6 +70,16 @@ class ThemeAccessTest {
     }
 
     @Test
+    fun addedStandardThemesAreAvailableWithoutMembership() {
+        val newThemes = listOf(AppTheme.MIDNIGHT, AppTheme.FOREST, AppTheme.NORTHERN_LIGHTS, AppTheme.EMBER)
+
+        newThemes.forEach { theme ->
+            assertTrue(theme in availableAppThemes(CosmeticEntitlements.None))
+            assertEquals(theme, resolveAppTheme(theme, CosmeticEntitlements.None))
+        }
+    }
+
+    @Test
     fun customThemeFollowsEntitledPresetsAndPrecedesStandardThemes() {
         val themes = availableAppThemes(
             CosmeticEntitlements(setOf(CosmeticEntitlement.GOLD_THEME)),

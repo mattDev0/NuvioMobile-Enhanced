@@ -94,6 +94,54 @@ object ThemeColors {
         backgroundCard = Color(0xFF20242A),
     )
 
+    val Midnight = ThemeColorPalette(
+        secondary = Color(0xFF6366F1),
+        secondaryVariant = Color(0xFF4F46E5),
+        nativeAccentHex = "#6366F1",
+        focusRing = Color(0xFF818CF8),
+        focusBackground = Color(0xFF1A1B3A),
+        background = Color(0xFF000000),
+        backgroundElevated = Color(0xFF0A0A0F),
+        backgroundCard = Color(0xFF14141C),
+    )
+
+    val Forest = ThemeColorPalette(
+        secondary = Color(0xFF22C55E),
+        secondaryVariant = Color(0xFF16A34A),
+        nativeAccentHex = "#22C55E",
+        onSecondary = Color(0xFF052E16),
+        focusRing = Color(0xFF4ADE80),
+        focusBackground = Color(0xFF11291A),
+        background = Color(0xFF07110B),
+        backgroundElevated = Color(0xFF0F1C14),
+        backgroundCard = Color(0xFF16271C),
+    )
+
+    val NorthernLights = ThemeColorPalette(
+        secondary = Color(0xFF2DD4BF),
+        secondaryVariant = Color(0xFFA855F7),
+        accentGradient = listOf(Color(0xFF2DD4BF), Color(0xFF60A5FA), Color(0xFFA855F7)),
+        nativeAccentHex = "#2DD4BF",
+        onSecondary = Color(0xFF04201C),
+        focusRing = Color(0xFF5EEAD4),
+        focusBackground = Color(0xFF14262B),
+        background = Color(0xFF060B12),
+        backgroundElevated = Color(0xFF0E1622),
+        backgroundCard = Color(0xFF15202E),
+    )
+
+    val Ember = ThemeColorPalette(
+        secondary = Color(0xFFEF4444),
+        secondaryVariant = Color(0xFFF59E0B),
+        accentGradient = listOf(Color(0xFFDC2626), Color(0xFFF97316), Color(0xFFFBBF24)),
+        nativeAccentHex = "#EF4444",
+        focusRing = Color(0xFFF87171),
+        focusBackground = Color(0xFF3A1512),
+        background = Color(0xFF100807),
+        backgroundElevated = Color(0xFF1E110E),
+        backgroundCard = Color(0xFF2A1714),
+    )
+
     val Crimson = ThemeColorPalette(
         secondary = Color(0xFFE53935),
         secondaryVariant = Color(0xFFC62828),
@@ -189,6 +237,10 @@ object ThemeColors {
         AppTheme.EMERALD -> Emerald
         AppTheme.AMBER -> Amber
         AppTheme.ROSE -> Rose
+        AppTheme.MIDNIGHT -> Midnight
+        AppTheme.FOREST -> Forest
+        AppTheme.NORTHERN_LIGHTS -> NorthernLights
+        AppTheme.EMBER -> Ember
         AppTheme.WHITE -> White
     }
 }
