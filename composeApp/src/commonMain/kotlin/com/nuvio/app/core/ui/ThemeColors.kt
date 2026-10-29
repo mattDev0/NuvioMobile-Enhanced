@@ -1,6 +1,8 @@
 package com.nuvio.app.core.ui
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 
 data class ThemeColorPalette(
     val secondary: Color,
@@ -14,7 +16,23 @@ data class ThemeColorPalette(
     val background: Color = Color(0xFF0D0D0D),
     val backgroundElevated: Color = Color(0xFF1A1A1A),
     val backgroundCard: Color = Color(0xFF242424),
-)
+) {
+    companion object {
+        fun fromMaterialYou(scheme: ColorScheme, amoled: Boolean): ThemeColorPalette = ThemeColorPalette(
+            secondary = scheme.primary,
+            secondaryVariant = scheme.tertiary,
+            accentGradient = listOf(scheme.primary, scheme.tertiary),
+            nativeAccentHex = formatHexColor(scheme.primary.toArgb() and 0xFFFFFF),
+            onSecondary = scheme.onPrimary,
+            onSecondaryVariant = scheme.onTertiary,
+            focusRing = scheme.primary,
+            focusBackground = scheme.primaryContainer,
+            background = if (amoled) Color.Black else scheme.surface,
+            backgroundElevated = scheme.surfaceContainer,
+            backgroundCard = scheme.surfaceContainerHigh,
+        )
+    }
+}
 
 object ThemeColors {
 

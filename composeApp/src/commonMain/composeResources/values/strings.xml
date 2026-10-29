@@ -720,6 +720,9 @@
     <string name="settings_account_status_signed_in">Signed in</string>
     <string name="settings_appearance_amoled_black">AMOLED Black</string>
     <string name="settings_appearance_amoled_description">Use pure black backgrounds for OLED screens.</string>
+    <string name="settings_appearance_material_you">Material You</string>
+    <string name="settings_appearance_material_you_description">Use your wallpaper colours and Google\'s latest Material design.</string>
+    <string name="settings_appearance_material_you_theme_disabled_hint">Theme colours come from your wallpaper while Material You is on.</string>
     <string name="settings_appearance_dynamic_artwork_background">Dynamic background color</string>
     <string name="settings_appearance_catalog_accent">Catalog accent underline</string>
     <string name="settings_appearance_catalog_accent_description">Show a small accent-colored bar under each catalog title on the home screen, matching your theme.</string>

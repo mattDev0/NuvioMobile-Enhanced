@@ -174,6 +174,7 @@ fun SettingsScreen(
             ThemeSettingsRepository.selectedTheme
         }.collectAsStateWithLifecycle()
         val amoledEnabled by remember { ThemeSettingsRepository.amoledEnabled }.collectAsStateWithLifecycle()
+        val materialYouEnabled by remember { ThemeSettingsRepository.materialYouEnabled }.collectAsStateWithLifecycle()
         val dynamicArtworkBackgroundEnabled by remember {
             ThemeSettingsRepository.dynamicArtworkBackgroundEnabled
         }.collectAsStateWithLifecycle()
@@ -442,6 +443,8 @@ fun SettingsScreen(
                         rememberLastProfileEnabled = profileSettingsState.rememberLastProfileEnabled,
                         selectedTheme = selectedTheme,
                         onThemeSelected = ThemeSettingsRepository::setTheme,
+                        materialYouEnabled = materialYouEnabled,
+                        onMaterialYouToggle = ThemeSettingsRepository::setMaterialYou,
                         amoledEnabled = amoledEnabled,
                         onAmoledToggle = ThemeSettingsRepository::setAmoled,
                         dynamicArtworkBackgroundEnabled = dynamicArtworkBackgroundEnabled,
@@ -523,6 +526,8 @@ fun SettingsScreen(
                         rememberLastProfileEnabled = profileSettingsState.rememberLastProfileEnabled,
                         selectedTheme = selectedTheme,
                         onThemeSelected = ThemeSettingsRepository::setTheme,
+                        materialYouEnabled = materialYouEnabled,
+                        onMaterialYouToggle = ThemeSettingsRepository::setMaterialYou,
                         amoledEnabled = amoledEnabled,
                         onAmoledToggle = ThemeSettingsRepository::setAmoled,
                         dynamicArtworkBackgroundEnabled = dynamicArtworkBackgroundEnabled,
@@ -616,6 +621,8 @@ private fun MobileSettingsScreen(
     rememberLastProfileEnabled: Boolean,
     selectedTheme: AppTheme,
     onThemeSelected: (AppTheme) -> Unit,
+    materialYouEnabled: Boolean,
+    onMaterialYouToggle: (Boolean) -> Unit,
     amoledEnabled: Boolean,
     onAmoledToggle: (Boolean) -> Unit,
     dynamicArtworkBackgroundEnabled: Boolean,
@@ -861,6 +868,8 @@ private fun MobileSettingsScreen(
                     isTablet = false,
                     selectedTheme = selectedTheme,
                     onThemeSelected = onThemeSelected,
+                    materialYouEnabled = materialYouEnabled,
+                    onMaterialYouToggle = onMaterialYouToggle,
                     amoledEnabled = amoledEnabled,
                     onAmoledToggle = onAmoledToggle,
                     dynamicArtworkBackgroundEnabled = dynamicArtworkBackgroundEnabled,
@@ -1068,6 +1077,8 @@ private fun TabletSettingsScreen(
     rememberLastProfileEnabled: Boolean,
     selectedTheme: AppTheme,
     onThemeSelected: (AppTheme) -> Unit,
+    materialYouEnabled: Boolean,
+    onMaterialYouToggle: (Boolean) -> Unit,
     amoledEnabled: Boolean,
     onAmoledToggle: (Boolean) -> Unit,
     dynamicArtworkBackgroundEnabled: Boolean,
@@ -1362,6 +1373,8 @@ private fun TabletSettingsScreen(
                         isTablet = true,
                         selectedTheme = selectedTheme,
                         onThemeSelected = onThemeSelected,
+                        materialYouEnabled = materialYouEnabled,
+                        onMaterialYouToggle = onMaterialYouToggle,
                         amoledEnabled = amoledEnabled,
                         onAmoledToggle = onAmoledToggle,
                         dynamicArtworkBackgroundEnabled = dynamicArtworkBackgroundEnabled,

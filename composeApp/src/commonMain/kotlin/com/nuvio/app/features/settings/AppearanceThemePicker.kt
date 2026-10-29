@@ -33,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.semantics.Role
@@ -61,17 +62,24 @@ internal fun AppearanceThemeSelector(
     isTablet: Boolean,
     selectedTheme: AppTheme,
     onThemeSelected: (AppTheme) -> Unit,
+    enabled: Boolean = true,
+    disabledHint: String? = null,
 ) {
     val tokens = MaterialTheme.nuvio
     var expanded by rememberSaveable { mutableStateOf(false) }
     val customColors by ThemeSettingsRepository.customThemeColors.collectAsStateWithLifecycle()
     val palette = remember(selectedTheme, customColors) { ThemeColors.getColorPalette(selectedTheme, customColors) }
-    val chevronRotation by animateFloatAsState(if (expanded) 90f else 0f, label = "themeChevron")
-    Column(modifier = Modifier.fillMaxWidth().animateContentSize()) {
+    val chevronRotation by animateFloatAsState(if (expanded && enabled) 90f else 0f, label = "themeChevron")
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+            .alpha(if (enabled) 1f else 0.45f),
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { expanded = !expanded }
+                .clickable(enabled = enabled) { expanded = !expanded }
                 .padding(
                     horizontal = if (isTablet) NuvioTokens.Space.s20 else NuvioTokens.Space.s16,
                     vertical = if (isTablet) NuvioTokens.Space.s16 else NuvioTokens.Space.s14,
@@ -85,21 +93,32 @@ internal fun AppearanceThemeSelector(
                     .background(palette.accentBrush()),
             )
             Spacer(Modifier.width(NuvioTokens.Space.s16))
-            Text(
-                text = stringResource(selectedTheme.labelRes),
-                style = MaterialTheme.typography.bodyLarge,
-                color = tokens.colors.textPrimary,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f),
-            )
-            Icon(
-                imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                contentDescription = null,
-                tint = tokens.colors.textMuted,
-                modifier = Modifier.rotate(chevronRotation),
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(selectedTheme.labelRes),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = tokens.colors.textPrimary,
+                    fontWeight = FontWeight.Medium,
+                )
+                if (disabledHint != null) {
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = disabledHint,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = tokens.colors.textMuted,
+                    )
+                }
+            }
+            if (enabled) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = tokens.colors.textMuted,
+                    modifier = Modifier.rotate(chevronRotation),
+                )
+            }
         }
-        if (expanded) {
+        if (expanded && enabled) {
             AppearanceThemePicker(
                 isTablet = isTablet,
                 selectedTheme = selectedTheme,

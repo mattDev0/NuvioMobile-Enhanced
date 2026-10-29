@@ -42,6 +42,9 @@ object ThemeSettingsRepository {
     private val _amoledEnabled = MutableStateFlow(false)
     val amoledEnabled: StateFlow<Boolean> = _amoledEnabled.asStateFlow()
 
+    private val _materialYouEnabled = MutableStateFlow(false)
+    val materialYouEnabled: StateFlow<Boolean> = _materialYouEnabled.asStateFlow()
+
     private val _tabBarBehavior = MutableStateFlow(NuvioTabBarBehavior.Default)
     val tabBarBehavior: StateFlow<NuvioTabBarBehavior> = _tabBarBehavior.asStateFlow()
 
@@ -111,6 +114,7 @@ object ThemeSettingsRepository {
         _customThemePreference.value = CustomThemeColors.Default
         _customThemeColors.value = CustomThemeColors.solid(CustomThemeColors.Default.second)
         _amoledEnabled.value = false
+        _materialYouEnabled.value = false
         _tabBarBehavior.value = NuvioTabBarBehavior.Default
         _liquidGlassNativeTabBarEnabled.value = NuvioTabBarBehavior.Default.isEnabled
         _dynamicArtworkBackgroundEnabled.value = false
@@ -150,6 +154,7 @@ object ThemeSettingsRepository {
         _customThemePreference.value = CustomThemeColors.decode(ThemeSettingsStorage.loadCustomThemeColors())
         applyEffectiveTheme()
         _amoledEnabled.value = ThemeSettingsStorage.loadAmoledEnabled() ?: false
+        _materialYouEnabled.value = ThemeSettingsStorage.loadMaterialYouEnabled() ?: false
         val behavior = NuvioTabBarBehavior.fromKey(ThemeSettingsStorage.loadTabBarBehavior())
             ?: NuvioTabBarBehavior.fromLegacyEnabled(
                 ThemeSettingsStorage.loadLiquidGlassNativeTabBarEnabled(),
@@ -211,6 +216,13 @@ object ThemeSettingsRepository {
         if (_amoledEnabled.value == enabled) return
         _amoledEnabled.value = enabled
         ThemeSettingsStorage.saveAmoledEnabled(enabled)
+    }
+
+    fun setMaterialYou(enabled: Boolean) {
+        ensureLoaded()
+        if (_materialYouEnabled.value == enabled) return
+        _materialYouEnabled.value = enabled
+        ThemeSettingsStorage.saveMaterialYouEnabled(enabled)
     }
 
     fun setTabBarBehavior(behavior: NuvioTabBarBehavior) {

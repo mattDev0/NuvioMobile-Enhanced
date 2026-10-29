@@ -1,8 +1,11 @@
 package com.nuvio.app.core.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LocalRippleConfiguration
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.CompositionLocalProvider
@@ -192,18 +195,42 @@ private val NuvioRippleConfiguration = RippleConfiguration(
     color = Color.Black,
 )
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NuvioTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     appTheme: AppTheme = AppTheme.WHITE,
     amoled: Boolean = false,
     customThemeColors: CustomThemeColors = CustomThemeColors.Default,
+    materialYou: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val palette = remember(appTheme, customThemeColors) {
-        ThemeColors.getColorPalette(appTheme, customThemeColors)
+    val dynamicScheme = if (materialYou && isMaterialYouSupported()) {
+        platformDynamicDarkColorScheme()
+    } else {
+        null
     }
-    val colorScheme = buildColorScheme(palette, amoled = amoled)
+    val isMaterialYouActive = dynamicScheme != null
+
+    val (palette, colorScheme) = if (isMaterialYouActive) {
+        val effectiveDynamicScheme = if (amoled) {
+            dynamicScheme!!.copy(
+                background = Color.Black,
+                surface = Color.Black,
+            )
+        } else {
+            dynamicScheme!!
+        }
+        val pal = ThemeColorPalette.fromMaterialYou(effectiveDynamicScheme, amoled = amoled)
+        pal to effectiveDynamicScheme
+    } else {
+        val pal = remember(appTheme, customThemeColors) {
+            ThemeColors.getColorPalette(appTheme, customThemeColors)
+        }
+        val scheme = buildColorScheme(pal, amoled = amoled)
+        pal to scheme
+    }
+
     val tokens = defaultNuvioThemeTokens(palette, amoled = amoled, colorScheme = colorScheme)
 
     val density = LocalDensity.current
@@ -217,12 +244,23 @@ fun NuvioTheme(
         LocalRippleConfiguration provides NuvioRippleConfiguration,
         LocalAppTheme provides appTheme,
         LocalThemePalette provides palette,
+        LocalMaterialYou provides isMaterialYouActive,
     ) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = NuvioTypography,
-        ) {
-            SkeletonAnimationProvider(content = content)
+        if (isMaterialYouActive) {
+            MaterialExpressiveTheme(
+                colorScheme = colorScheme,
+                motionScheme = MotionScheme.expressive(),
+                typography = NuvioTypography,
+            ) {
+                SkeletonAnimationProvider(content = content)
+            }
+        } else {
+            MaterialTheme(
+                colorScheme = colorScheme,
+                typography = NuvioTypography,
+            ) {
+                SkeletonAnimationProvider(content = content)
+            }
         }
     }
 }

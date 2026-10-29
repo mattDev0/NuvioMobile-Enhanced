@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nuvio.app.core.ui.NuvioTokens
+import com.nuvio.app.core.ui.isMaterialYouSupported
 import com.nuvio.app.core.ui.nuvio
 import com.nuvio.app.isIos
 import com.nuvio.app.supportsPosterNavigationMotion
@@ -402,6 +403,17 @@ internal fun settingsSearchEntries(
         section = stringResource(Res.string.settings_appearance_section_display),
         icon = Icons.Rounded.Palette,
     )
+    if (isMaterialYouSupported()) {
+        addRow(
+            page = SettingsPage.Appearance,
+            key = "material-you",
+            title = stringResource(Res.string.settings_appearance_material_you),
+            description = stringResource(Res.string.settings_appearance_material_you_description),
+            pageLabel = layoutPage,
+            section = stringResource(Res.string.settings_appearance_section_theme),
+            icon = Icons.Rounded.Palette,
+        )
+    }
     addRow(
         page = SettingsPage.Appearance,
         key = "dynamic-artwork-background",

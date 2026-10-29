@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nuvio.app.core.ui.floatingNavigationGlowSupported
+import com.nuvio.app.core.ui.isMaterialYouSupported
 import com.nuvio.app.isIos
 import com.nuvio.app.core.ui.AppTheme
 import com.nuvio.app.core.ui.NuvioBottomSheetActionRow
@@ -54,6 +55,9 @@ import nuvio.composeapp.generated.resources.settings_nav_bar_glow_off
 import nuvio.composeapp.generated.resources.settings_nav_bar_summary
 import nuvio.composeapp.generated.resources.settings_appearance_amoled_black
 import nuvio.composeapp.generated.resources.settings_appearance_amoled_description
+import nuvio.composeapp.generated.resources.settings_appearance_material_you
+import nuvio.composeapp.generated.resources.settings_appearance_material_you_description
+import nuvio.composeapp.generated.resources.settings_appearance_material_you_theme_disabled_hint
 import nuvio.composeapp.generated.resources.settings_appearance_dynamic_artwork_background
 import nuvio.composeapp.generated.resources.settings_appearance_dynamic_artwork_background_description
 import nuvio.composeapp.generated.resources.settings_appearance_catalog_accent
@@ -83,6 +87,8 @@ internal fun LazyListScope.appearanceSettingsContent(
     isTablet: Boolean,
     selectedTheme: AppTheme,
     onThemeSelected: (AppTheme) -> Unit,
+    materialYouEnabled: Boolean,
+    onMaterialYouToggle: (Boolean) -> Unit,
     amoledEnabled: Boolean,
     onAmoledToggle: (Boolean) -> Unit,
     dynamicArtworkBackgroundEnabled: Boolean,
@@ -112,10 +118,22 @@ internal fun LazyListScope.appearanceSettingsContent(
             isTablet = isTablet,
         ) {
             SettingsGroup(isTablet = isTablet) {
+                if (isMaterialYouSupported()) {
+                    SettingsSwitchRow(
+                        title = stringResource(Res.string.settings_appearance_material_you),
+                        description = stringResource(Res.string.settings_appearance_material_you_description),
+                        checked = materialYouEnabled,
+                        isTablet = isTablet,
+                        onCheckedChange = onMaterialYouToggle,
+                    )
+                    SettingsGroupDivider(isTablet = isTablet)
+                }
                 AppearanceThemeSelector(
                     isTablet = isTablet,
                     selectedTheme = selectedTheme,
                     onThemeSelected = onThemeSelected,
+                    enabled = !materialYouEnabled,
+                    disabledHint = if (materialYouEnabled) stringResource(Res.string.settings_appearance_material_you_theme_disabled_hint) else null,
                 )
             }
         }

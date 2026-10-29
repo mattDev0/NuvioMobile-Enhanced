@@ -915,6 +915,7 @@ internal object SettingsConfigTransfer {
         ThemeSettingsStorage.loadSelectedTheme()?.let { put("selected_theme", encodeSyncString(it)) }
         ThemeSettingsStorage.loadCustomThemeColors()?.let { put("custom_theme_colors", encodeSyncString(it)) }
         ThemeSettingsStorage.loadAmoledEnabled()?.let { put("amoled_enabled", encodeSyncBoolean(it)) }
+        ThemeSettingsStorage.loadMaterialYouEnabled()?.let { put("material_you_enabled", encodeSyncBoolean(it)) }
         ThemeSettingsStorage.loadLiquidGlassNativeTabBarEnabled()?.let { put("liquid_glass_native_tab_bar_enabled", encodeSyncBoolean(it)) }
         ThemeSettingsStorage.loadTabBarBehavior()?.let { put("tab_bar_behavior", encodeSyncString(it)) }
         ThemeSettingsStorage.loadDynamicArtworkBackgroundEnabled()?.let { put("dynamic_artwork_background_enabled", encodeSyncBoolean(it)) }
@@ -935,6 +936,7 @@ internal object SettingsConfigTransfer {
         payload.decodeSyncString("selected_theme")?.let { ThemeSettingsStorage.saveSelectedTheme(it) }
         payload.decodeSyncString("custom_theme_colors")?.let { ThemeSettingsStorage.saveCustomThemeColors(it) }
         payload.decodeSyncBoolean("amoled_enabled")?.let { ThemeSettingsStorage.saveAmoledEnabled(it) }
+        payload.decodeSyncBoolean("material_you_enabled")?.let { ThemeSettingsStorage.saveMaterialYouEnabled(it) }
         payload.decodeSyncBoolean("liquid_glass_native_tab_bar_enabled")?.let { ThemeSettingsStorage.saveLiquidGlassNativeTabBarEnabled(it) }
         payload.decodeSyncString("tab_bar_behavior")?.let { ThemeSettingsStorage.saveTabBarBehavior(it) }
         payload.decodeSyncBoolean("dynamic_artwork_background_enabled")?.let { ThemeSettingsStorage.saveDynamicArtworkBackgroundEnabled(it) }
