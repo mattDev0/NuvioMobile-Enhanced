@@ -14,5 +14,8 @@ internal fun PartySource.matches(stream: StreamItem): Boolean {
     val streamFile = (stream.behaviorHints.filename ?: stream.clientResolve?.filename)?.trim()
     if (file != null && !streamFile.isNullOrEmpty()) return file.equals(streamFile, ignoreCase = true)
     val label = name?.trim()?.takeIf { it.isNotEmpty() } ?: return false
-    return stream.addonId == addonId && stream.streamLabel.trim().equals(label, ignoreCase = true)
+    // Hosts on newer builds send the single-line headline, older ones the raw multi-line name.
+    return stream.addonId == addonId &&
+        (stream.sourceHeadline.equals(label, ignoreCase = true) ||
+            stream.streamLabel.trim().equals(label, ignoreCase = true))
 }

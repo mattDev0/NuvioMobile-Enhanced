@@ -38,9 +38,7 @@ data class StreamItem(
         get() = name?.takeIf { it.isNotBlank() } ?: "Stream"
 
     val sourceHeadline: String
-        get() = streamLabel
-            .replace(Regex("[\\r\\n]+"), " ")
-            .trim()
+        get() = streamLabel.replace(LineBreaks, " ").trim()
 
     val streamSubtitle: String?
         get() = description
@@ -341,3 +339,5 @@ data class StreamsUiState(
     val hasAnyStreams: Boolean
         get() = groups.any { it.streams.isNotEmpty() }
 }
+
+private val LineBreaks = Regex("[\\r\\n]+")
