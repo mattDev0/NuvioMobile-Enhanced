@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nuvio.app.core.ui.LocalMaterialYou
 import com.nuvio.app.core.ui.LocalNuvioBottomNavigationOverlayPadding
 import com.nuvio.app.core.ui.FloatingNavigationBar
 import com.nuvio.app.core.ui.FloatingNavigationItem
@@ -104,9 +105,10 @@ internal fun MainTabsDestination(
         } else {
             null
         }
-        val floatingBarOnTop = navBarStyleSetting != NavBarStyle.CLASSIC && navBarPosition == NavBarPosition.TOP
+        val isMaterialYou = LocalMaterialYou.current
+        val floatingBarOnTop = (navBarStyleSetting != NavBarStyle.CLASSIC || isMaterialYou) && navBarPosition == NavBarPosition.TOP
         // The backdrop source is only consumed by the custom floating bar, not native or CLASSIC navigation.
-        val floatingBarVisible = tabsRouteActive && !useNativeBottomTabs && navBarStyleSetting != NavBarStyle.CLASSIC
+        val floatingBarVisible = tabsRouteActive && !useNativeBottomTabs && (navBarStyleSetting != NavBarStyle.CLASSIC || isMaterialYou)
         val navBarBackdrop = if (floatingBarVisible) rememberNuvioBackdrop() else null
         val floatingNavigationItems = mainFloatingNavigationItems(
             highlightedTab = highlightedTab,
@@ -125,7 +127,7 @@ internal fun MainTabsDestination(
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0),
             bottomBar = {
-                if (tabsRouteActive && !isTabletLayout && !useNativeBottomTabs && navBarStyleSetting == NavBarStyle.CLASSIC) {
+                if (tabsRouteActive && !isTabletLayout && !useNativeBottomTabs && navBarStyleSetting == NavBarStyle.CLASSIC && !isMaterialYou) {
                     MainClassicNavigationBar(
                         highlightedTab = highlightedTab,
                         showLiveTv = showLiveTvInNavigation,
@@ -140,6 +142,7 @@ internal fun MainTabsDestination(
                 CompositionLocalProvider(
                     LocalNuvioBottomNavigationOverlayPadding provides when {
                         tabsRouteActive && useNativeBottomTabs -> 49.dp
+                        tabsRouteActive && isMaterialYou && !floatingBarOnTop -> 80.dp
                         // A top pill floats over the content like the tablet CLASSIC bar, so
                         // nothing needs to be kept clear at the bottom.
                         tabsRouteActive && navBarStyleSetting != NavBarStyle.CLASSIC && !floatingBarOnTop -> 72.dp
@@ -170,7 +173,7 @@ internal fun MainTabsDestination(
                 // CLASSIC keeps the previous per-form-factor chrome: a top rail on
                 // tablet/landscape and the solid bottom bar on phones. Every other
                 // style now uses the floating pill at the bottom on all sizes.
-                if (isTabletLayout && !useNativeBottomTabs && navBarStyleSetting == NavBarStyle.CLASSIC) {
+                if (isTabletLayout && !useNativeBottomTabs && navBarStyleSetting == NavBarStyle.CLASSIC && !isMaterialYou) {
                     TabletFloatingTopBar(
                         selectedTab = highlightedTab,
                         showLiveTv = showLiveTvInNavigation,
@@ -383,9 +386,10 @@ internal fun BoxScope.SettingsRouteNavigationBar(
     }
     val density = LocalDensity.current
     val highlightedTab = AppScreenTab.Settings
+    val isMaterialYou = LocalMaterialYou.current
 
     when {
-        style == NavBarStyle.CLASSIC && isTabletLayout -> {
+        style == NavBarStyle.CLASSIC && isTabletLayout && !isMaterialYou -> {
             SideEffect { onBottomOverlayChanged(0.dp) }
             TabletFloatingTopBar(
                 selectedTab = highlightedTab,
@@ -396,7 +400,7 @@ internal fun BoxScope.SettingsRouteNavigationBar(
                 modifier = Modifier.align(Alignment.TopCenter),
             )
         }
-        style == NavBarStyle.CLASSIC -> {
+        style == NavBarStyle.CLASSIC && !isMaterialYou -> {
             Box(
                 Modifier.align(Alignment.BottomCenter).onSizeChanged {
                     onBottomOverlayChanged(with(density) { it.height.toDp() })
@@ -413,7 +417,8 @@ internal fun BoxScope.SettingsRouteNavigationBar(
         }
         else -> {
             val onTop = position == NavBarPosition.TOP
-            SideEffect { onBottomOverlayChanged(if (onTop) 0.dp else 72.dp) }
+            val navHeight = if (isMaterialYou) 80.dp else 72.dp
+            SideEffect { onBottomOverlayChanged(if (onTop) 0.dp else navHeight) }
             FloatingNavigationBar(
                 items = mainFloatingNavigationItems(
                     highlightedTab = highlightedTab,

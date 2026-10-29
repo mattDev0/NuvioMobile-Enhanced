@@ -18,7 +18,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -74,6 +80,7 @@ import com.nuvio.app.core.ui.jelly.jellyPillPath
 import kotlin.math.abs
 import kotlin.math.max
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 internal class FloatingNavigationItem(
     val label: String,
@@ -118,6 +125,15 @@ internal fun FloatingNavigationBar(
     scrollBounceDirection: Float = 0f,
 ) {
     if (items.isEmpty()) return
+    if (LocalMaterialYou.current) {
+        MaterialYouNavigationBar(
+            items = items,
+            modifier = modifier,
+            contentPadding = contentPadding,
+            defaultIconColorOverride = defaultIconColorOverride,
+        )
+        return
+    }
     val showGlow = !floatingNavigationGlowSupported || glowEnabled
     val glowStrength by animateFloatAsState(
         targetValue = if (showGlow) 1f else 0f,
@@ -683,3 +699,67 @@ internal suspend fun PointerInputScope.detectJellyTabGestures(
 
 private val SolidSelectionPillFill = Color.Black.copy(alpha = 0.34f)
 private val SolidSelectionPillEdge = Color.White.copy(alpha = 0.28f)
+
+@Composable
+private fun MaterialYouNavigationBar(
+    items: List<FloatingNavigationItem>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = floatingNavigationBarPadding(),
+    defaultIconColorOverride: Color? = null,
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        tonalElevation = 3.dp,
+    ) {
+        NavigationBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(contentPadding),
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ) {
+            items.forEach { item ->
+                NavigationBarItem(
+                    selected = item.selected,
+                    onClick = item.onClick,
+                    icon = {
+                        if (item.content != null) {
+                            Box(
+                                modifier = Modifier.size(24.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                item.content.invoke(item.onClick, defaultIconColorOverride)
+                            }
+                        } else if (item.icon != null) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.label,
+                            )
+                        } else if (item.drawable != null) {
+                            Icon(
+                                painter = painterResource(item.drawable),
+                                contentDescription = item.label,
+                            )
+                        }
+                    },
+                    label = {
+                        Text(
+                            text = item.label,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                        selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                )
+            }
+        }
+    }
+}
