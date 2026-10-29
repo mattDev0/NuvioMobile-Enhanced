@@ -132,7 +132,7 @@ private fun PremiumizeUsageContent(usage: PremiumizeAccountUsage) {
     val tokens = MaterialTheme.nuvio
     val remainingFraction = usage.fairUseRemainingFraction
     val isLow = remainingFraction < LOW_FAIR_USE_REMAINING_FRACTION
-    val barColor = if (isLow) tokens.colors.warning else tokens.colors.success
+    val barColor = if (isLow) tokens.colors.warning else tokens.colors.accent
 
     Row(
         modifier = Modifier.fillMaxWidth(),

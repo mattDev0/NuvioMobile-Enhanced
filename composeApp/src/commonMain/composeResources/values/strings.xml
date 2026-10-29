@@ -1061,7 +1061,7 @@
     <string name="settings_premiumize_usage_title">PREMIUMIZE USAGE</string>
     <string name="settings_premiumize_usage_refresh">Refresh usage</string>
     <string name="settings_premiumize_usage_fair_use_remaining">Fair-use points remaining</string>
-    <string name="settings_premiumize_usage_percent_summary">%1$d%% remaining · %2$d%% used</string>
+    <string name="settings_premiumize_usage_percent_summary">%1$d% remaining · %2$d% used</string>
     <string name="settings_premiumize_usage_low_warning">Running low. Downloads may be limited until points reset.</string>
     <string name="settings_premiumize_usage_used">Usage</string>
     <string name="settings_premiumize_usage_points">%1$d points</string>
