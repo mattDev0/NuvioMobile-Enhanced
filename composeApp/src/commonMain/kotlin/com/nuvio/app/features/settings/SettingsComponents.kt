@@ -23,11 +23,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -49,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.nuvio.app.core.ui.LocalMaterialYou
 import com.nuvio.app.core.ui.NuvioTokens
 import com.nuvio.app.core.ui.NuvioActionLabel
 import com.nuvio.app.core.ui.NuvioBackButton
@@ -78,17 +82,27 @@ private fun SettingsCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val tokens = MaterialTheme.nuvio
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = tokens.colors.surface,
-        shape = if (isTablet) RoundedCornerShape(NuvioTokens.Radius.xl) else tokens.shapes.compactCard,
-        border = BorderStroke(
-            tokens.borders.hairline,
-            tokens.colors.borderSubtle,
-        ),
-    ) {
-        Column(content = content)
+    if (LocalMaterialYou.current) {
+        Surface(
+            modifier = modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surfaceContainer,
+            shape = RoundedCornerShape(24.dp),
+        ) {
+            Column(content = content)
+        }
+    } else {
+        val tokens = MaterialTheme.nuvio
+        Surface(
+            modifier = modifier.fillMaxWidth(),
+            color = tokens.colors.surface,
+            shape = if (isTablet) RoundedCornerShape(NuvioTokens.Radius.xl) else tokens.shapes.compactCard,
+            border = BorderStroke(
+                tokens.borders.hairline,
+                tokens.colors.borderSubtle,
+            ),
+        ) {
+            Column(content = content)
+        }
     }
 }
 
@@ -108,12 +122,20 @@ internal fun SettingsGroup(
 
 @Composable
 internal fun SettingsGroupDivider(isTablet: Boolean) {
-    val tokens = MaterialTheme.nuvio
-    HorizontalDivider(
-        modifier = Modifier.padding(start = if (isTablet) NuvioTokens.Space.s80 - NuvioTokens.Space.s2 else NuvioTokens.Space.s64 + NuvioTokens.Space.s2),
-        thickness = tokens.borders.hairline,
-        color = tokens.colors.borderSubtle,
-    )
+    if (LocalMaterialYou.current) {
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+        )
+    } else {
+        val tokens = MaterialTheme.nuvio
+        HorizontalDivider(
+            modifier = Modifier.padding(start = if (isTablet) NuvioTokens.Space.s80 - NuvioTokens.Space.s2 else NuvioTokens.Space.s64 + NuvioTokens.Space.s2),
+            thickness = tokens.borders.hairline,
+            color = tokens.colors.borderSubtle,
+        )
+    }
 }
 
 @Composable
@@ -165,50 +187,79 @@ internal fun SettingsSidebarItem(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val tokens = MaterialTheme.nuvio
-    val primary = tokens.colors.accent
-    val background = if (selected) primary.copy(alpha = tokens.opacity.hover) else Color.Transparent
-    val iconChip = if (selected) primary.copy(alpha = tokens.opacity.selected) else Color.Transparent
-    val contentColor = if (selected) tokens.colors.textPrimary else tokens.colors.textMuted
+    if (LocalMaterialYou.current) {
+        val background = if (selected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
+        val contentColor = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = tokens.spacing.listGap, vertical = NuvioTokens.Space.s2)
-            .background(background, RoundedCornerShape(NuvioTokens.Space.s10))
-            .clickable(onClick = onClick)
-            .padding(horizontal = tokens.spacing.screenHorizontal, vertical = tokens.spacing.listGap),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Surface(
-            modifier = Modifier.size(tokens.icons.xl),
-            color = iconChip,
-            shape = RoundedCornerShape(NuvioTokens.Radius.md),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 2.dp)
+                .background(background, RoundedCornerShape(28.dp))
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = if (selected) {
-                        Modifier.gradientMask(MaterialTheme.themePalette.accentBrush())
-                    } else {
-                        Modifier
-                    },
-                    tint = if (selected) primary else contentColor,
-                )
-            }
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = contentColor,
+                modifier = Modifier.size(24.dp),
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleSmall,
+                color = contentColor,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            )
         }
-        Spacer(modifier = Modifier.width(tokens.spacing.listGap))
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            color = contentColor,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
-        )
+    } else {
+        val tokens = MaterialTheme.nuvio
+        val primary = tokens.colors.accent
+        val background = if (selected) primary.copy(alpha = tokens.opacity.hover) else Color.Transparent
+        val iconChip = if (selected) primary.copy(alpha = tokens.opacity.selected) else Color.Transparent
+        val contentColor = if (selected) tokens.colors.textPrimary else tokens.colors.textMuted
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = tokens.spacing.listGap, vertical = NuvioTokens.Space.s2)
+                .background(background, RoundedCornerShape(NuvioTokens.Space.s10))
+                .clickable(onClick = onClick)
+                .padding(horizontal = tokens.spacing.screenHorizontal, vertical = tokens.spacing.listGap),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Surface(
+                modifier = Modifier.size(tokens.icons.xl),
+                color = iconChip,
+                shape = RoundedCornerShape(NuvioTokens.Radius.md),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        modifier = if (selected) {
+                            Modifier.gradientMask(MaterialTheme.themePalette.accentBrush())
+                        } else {
+                            Modifier
+                        },
+                        tint = if (selected) primary else contentColor,
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(tokens.spacing.listGap))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                color = contentColor,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+            )
+        }
     }
 }
 
@@ -226,7 +277,16 @@ internal fun SettingsSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            NuvioSectionLabel(text = title)
+            if (LocalMaterialYou.current) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                )
+            } else {
+                NuvioSectionLabel(text = title)
+            }
             Row(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
@@ -245,25 +305,45 @@ internal fun SettingsClickableRow(
     isTablet: Boolean,
     onClick: () -> Unit,
 ) {
-    val tokens = MaterialTheme.nuvio
-    val verticalPadding = if (isTablet) 16.dp else 14.dp
-    val horizontalPadding = if (isTablet) 20.dp else 16.dp
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = enabled, onClick = onClick)
-            .padding(horizontal = horizontalPadding, vertical = verticalPadding)
-            .alpha(if (enabled) NuvioTokens.Opacity.visible else tokens.opacity.medium),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyLarge,
-            color = tokens.colors.accent,
-            fontWeight = FontWeight.Medium,
+    if (LocalMaterialYou.current) {
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Medium,
+                )
+            },
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Transparent,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled, onClick = onClick)
+                .alpha(if (enabled) 1f else 0.5f),
         )
+    } else {
+        val tokens = MaterialTheme.nuvio
+        val verticalPadding = if (isTablet) 16.dp else 14.dp
+        val horizontalPadding = if (isTablet) 20.dp else 16.dp
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled, onClick = onClick)
+                .padding(horizontal = horizontalPadding, vertical = verticalPadding)
+                .alpha(if (enabled) NuvioTokens.Opacity.visible else tokens.opacity.medium),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = tokens.colors.accent,
+                fontWeight = FontWeight.Medium,
+            )
+        }
     }
 }
 
@@ -278,76 +358,146 @@ internal fun SettingsNavigationRow(
     trailingContent: (@Composable RowScope.() -> Unit)? = null,
     onClick: () -> Unit,
 ) {
-    val tokens = MaterialTheme.nuvio
-    val iconSize = if (isTablet) 42.dp else 36.dp
-    val verticalPadding = if (isTablet) 16.dp else 14.dp
-    val horizontalPadding = if (isTablet) 20.dp else 16.dp
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = enabled, onClick = onClick)
-            .padding(horizontal = horizontalPadding, vertical = verticalPadding)
-            .alpha(if (enabled) NuvioTokens.Opacity.visible else tokens.opacity.medium),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Row(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 12.dp)
-                .widthIn(max = if (isTablet) 560.dp else Dp.Unspecified),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (icon != null || iconPainter != null) {
-                Surface(
-                    modifier = Modifier.size(iconSize),
-                    color = tokens.colors.accent.copy(alpha = tokens.opacity.pressed),
-                    shape = tokens.shapes.compactCard,
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        if (iconPainter != null) {
-                            androidx.compose.foundation.Image(
-                                painter = iconPainter,
-                                contentDescription = null,
-                                modifier = Modifier.size(if (isTablet) 28.dp else 24.dp),
-                                contentScale = ContentScale.Fit,
-                            )
-                        } else if (icon != null) {
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = null,
-                                modifier = Modifier.gradientMask(MaterialTheme.themePalette.accentBrush()),
-                                tint = tokens.colors.accent,
-                            )
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.width(if (isTablet) 16.dp else 14.dp))
-            }
-            Column {
+    if (LocalMaterialYou.current) {
+        val iconSize = if (isTablet) 40.dp else 36.dp
+        ListItem(
+            headlineContent = {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = tokens.colors.textPrimary,
                     fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
-                if (!description.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(2.dp))
+            },
+            supportingContent = if (!description.isNullOrBlank()) {
+                {
                     Text(
                         text = description,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = tokens.colors.textMuted,
-                        modifier = Modifier.alpha(0.92f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+            } else null,
+            leadingContent = if (icon != null || iconPainter != null) {
+                {
+                    Surface(
+                        modifier = Modifier.size(iconSize),
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            if (iconPainter != null) {
+                                androidx.compose.foundation.Image(
+                                    painter = iconPainter,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(if (isTablet) 26.dp else 22.dp),
+                                    contentScale = ContentScale.Fit,
+                                )
+                            } else if (icon != null) {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(if (isTablet) 24.dp else 20.dp),
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
+                            }
+                        }
+                    }
+                }
+            } else null,
+            trailingContent = if (trailingContent != null) {
+                {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End,
+                        content = trailingContent,
+                    )
+                }
+            } else null,
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Transparent,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled, onClick = onClick)
+                .alpha(if (enabled) 1f else 0.5f),
+        )
+    } else {
+        val tokens = MaterialTheme.nuvio
+        val iconSize = if (isTablet) 42.dp else 36.dp
+        val verticalPadding = if (isTablet) 16.dp else 14.dp
+        val horizontalPadding = if (isTablet) 20.dp else 16.dp
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled, onClick = onClick)
+                .padding(horizontal = horizontalPadding, vertical = verticalPadding)
+                .alpha(if (enabled) NuvioTokens.Opacity.visible else tokens.opacity.medium),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 12.dp)
+                    .widthIn(max = if (isTablet) 560.dp else Dp.Unspecified),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (icon != null || iconPainter != null) {
+                    Surface(
+                        modifier = Modifier.size(iconSize),
+                        color = tokens.colors.accent.copy(alpha = tokens.opacity.pressed),
+                        shape = tokens.shapes.compactCard,
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            if (iconPainter != null) {
+                                androidx.compose.foundation.Image(
+                                    painter = iconPainter,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(if (isTablet) 28.dp else 24.dp),
+                                    contentScale = ContentScale.Fit,
+                                )
+                            } else if (icon != null) {
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = null,
+                                    modifier = Modifier.gradientMask(MaterialTheme.themePalette.accentBrush()),
+                                    tint = tokens.colors.accent,
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(if (isTablet) 16.dp else 14.dp))
+                }
+                Column {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = tokens.colors.textPrimary,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    if (!description.isNullOrBlank()) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = tokens.colors.textMuted,
+                            modifier = Modifier.alpha(0.92f),
+                        )
+                    }
+                }
             }
+            trailingContent?.invoke(this)
         }
-        trailingContent?.invoke(this)
     }
 }
 
@@ -361,51 +511,96 @@ internal fun SettingsSwitchRow(
     horizontalPadding: Dp = if (isTablet) 20.dp else 16.dp,
     onCheckedChange: (Boolean) -> Unit,
 ) {
-    val tokens = MaterialTheme.nuvio
-    val verticalPadding = if (isTablet) 16.dp else 14.dp
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(enabled = enabled) { onCheckedChange(!checked) }
-            .padding(horizontal = horizontalPadding, vertical = verticalPadding),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 12.dp)
-                .widthIn(max = if (isTablet) 560.dp else Dp.Unspecified)
-                .alpha(if (enabled) NuvioTokens.Opacity.visible else tokens.opacity.medium),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = tokens.colors.textPrimary,
-                fontWeight = FontWeight.Medium,
-            )
-            if (!description.isNullOrBlank()) {
+    if (LocalMaterialYou.current) {
+        ListItem(
+            headlineContent = {
                 Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = tokens.colors.textMuted,
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
-            }
-        }
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            enabled = enabled,
-            modifier = Modifier.padding(start = 4.dp),
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = tokens.colors.onAccent,
-                checkedTrackColor = tokens.colors.accent,
-                uncheckedThumbColor = tokens.colors.textMuted,
-                uncheckedTrackColor = tokens.colors.borderDefault,
+            },
+            supportingContent = if (!description.isNullOrBlank()) {
+                {
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            } else null,
+            trailingContent = {
+                Switch(
+                    checked = checked,
+                    onCheckedChange = onCheckedChange,
+                    enabled = enabled,
+                    thumbContent = if (checked) {
+                        {
+                            Icon(
+                                imageVector = Icons.Rounded.Check,
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize),
+                            )
+                        }
+                    } else null,
+                )
+            },
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Transparent,
             ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled) { onCheckedChange(!checked) }
+                .alpha(if (enabled) 1f else 0.5f),
         )
+    } else {
+        val tokens = MaterialTheme.nuvio
+        val verticalPadding = if (isTablet) 16.dp else 14.dp
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled) { onCheckedChange(!checked) }
+                .padding(horizontal = horizontalPadding, vertical = verticalPadding),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 12.dp)
+                    .widthIn(max = if (isTablet) 560.dp else Dp.Unspecified)
+                    .alpha(if (enabled) NuvioTokens.Opacity.visible else tokens.opacity.medium),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = tokens.colors.textPrimary,
+                    fontWeight = FontWeight.Medium,
+                )
+                if (!description.isNullOrBlank()) {
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = tokens.colors.textMuted,
+                    )
+                }
+            }
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                enabled = enabled,
+                modifier = Modifier.padding(start = 4.dp),
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = tokens.colors.onAccent,
+                    checkedTrackColor = tokens.colors.accent,
+                    uncheckedThumbColor = tokens.colors.textMuted,
+                    uncheckedTrackColor = tokens.colors.borderDefault,
+                ),
+            )
+        }
     }
 }
 
@@ -418,6 +613,7 @@ internal fun SettingsChipRow(
     footer: String? = null,
     chips: @Composable FlowRowScope.() -> Unit,
 ) {
+    val isMaterialYou = LocalMaterialYou.current
     val tokens = MaterialTheme.nuvio
     Column(
         modifier = Modifier
@@ -432,13 +628,13 @@ internal fun SettingsChipRow(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
-                color = tokens.colors.textPrimary,
+                color = if (isMaterialYou) MaterialTheme.colorScheme.onSurface else tokens.colors.textPrimary,
                 fontWeight = FontWeight.Medium,
             )
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = tokens.colors.textMuted,
+                color = if (isMaterialYou) MaterialTheme.colorScheme.onSurfaceVariant else tokens.colors.textMuted,
             )
         }
         FlowRow(
@@ -450,7 +646,7 @@ internal fun SettingsChipRow(
             Text(
                 text = footer,
                 style = MaterialTheme.typography.bodySmall,
-                color = tokens.colors.textMuted,
+                color = if (isMaterialYou) MaterialTheme.colorScheme.onSurfaceVariant else tokens.colors.textMuted,
             )
         }
     }
@@ -467,6 +663,7 @@ internal fun HomescreenCatalogRow(
     dragHandleScope: ReorderableCollectionItemScope,
     onPinnedDragAttempt: () -> Unit = {},
 ) {
+    val isMaterialYou = LocalMaterialYou.current
     val tokens = MaterialTheme.nuvio
     val horizontalPadding = if (isTablet) 20.dp else 16.dp
     val verticalPadding = if (isTablet) 18.dp else 16.dp
@@ -494,7 +691,7 @@ internal fun HomescreenCatalogRow(
                 Text(
                     text = item.displayTitle,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = tokens.colors.textPrimary,
+                    color = if (isMaterialYou) MaterialTheme.colorScheme.onSurface else tokens.colors.textPrimary,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -506,7 +703,7 @@ internal fun HomescreenCatalogRow(
                         item.addonName
                     },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = tokens.colors.textMuted,
+                    color = if (isMaterialYou) MaterialTheme.colorScheme.onSurfaceVariant else tokens.colors.textMuted,
                 )
                 Text(
                     text = buildString {
@@ -534,23 +731,39 @@ internal fun HomescreenCatalogRow(
                         }
                     },
                     style = MaterialTheme.typography.bodySmall,
-                    color = tokens.colors.textMuted,
+                    color = if (isMaterialYou) MaterialTheme.colorScheme.onSurfaceVariant else tokens.colors.textMuted,
                 )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Switch(
-                    checked = item.enabled,
-                    onCheckedChange = onEnabledChange,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = tokens.colors.onAccent,
-                        checkedTrackColor = tokens.colors.accent,
-                        uncheckedThumbColor = tokens.colors.textMuted,
-                        uncheckedTrackColor = tokens.colors.borderDefault,
-                    ),
-                )
+                if (isMaterialYou) {
+                    Switch(
+                        checked = item.enabled,
+                        onCheckedChange = onEnabledChange,
+                        thumbContent = if (item.enabled) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Rounded.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                                )
+                            }
+                        } else null,
+                    )
+                } else {
+                    Switch(
+                        checked = item.enabled,
+                        onCheckedChange = onEnabledChange,
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = tokens.colors.onAccent,
+                            checkedTrackColor = tokens.colors.accent,
+                            uncheckedThumbColor = tokens.colors.textMuted,
+                            uncheckedTrackColor = tokens.colors.borderDefault,
+                        ),
+                    )
+                }
                 if (item.isPinnedToTop) {
                     IconButton(
                         onClick = onPinnedDragAttempt,
@@ -558,7 +771,7 @@ internal fun HomescreenCatalogRow(
                         Icon(
                             imageVector = Icons.Rounded.Lock,
                             contentDescription = stringResource(Res.string.settings_homescreen_pinned),
-                            tint = tokens.colors.textMuted.copy(alpha = tokens.opacity.medium),
+                            tint = if (isMaterialYou) MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) else tokens.colors.textMuted.copy(alpha = tokens.opacity.medium),
                         )
                     }
                 } else {
@@ -578,7 +791,7 @@ internal fun HomescreenCatalogRow(
                         Icon(
                             imageVector = Icons.Rounded.Menu,
                             contentDescription = stringResource(Res.string.settings_homescreen_reorder),
-                            tint = tokens.colors.textMuted,
+                            tint = if (isMaterialYou) MaterialTheme.colorScheme.onSurfaceVariant else tokens.colors.textMuted,
                         )
                     }
                 }
@@ -596,13 +809,17 @@ internal fun HomescreenCatalogRow(
                     singleLine = true,
                     label = { Text(stringResource(Res.string.settings_homescreen_display_name)) },
                     placeholder = { Text(item.defaultTitle) },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = tokens.colors.borderFocus.copy(alpha = tokens.opacity.strong),
-                        unfocusedBorderColor = tokens.colors.borderDefault.copy(alpha = tokens.opacity.medium),
-                        focusedContainerColor = tokens.colors.surface,
-                        unfocusedContainerColor = tokens.colors.surface,
-                        disabledContainerColor = tokens.colors.surface,
-                    ),
+                    colors = if (isMaterialYou) {
+                        OutlinedTextFieldDefaults.colors()
+                    } else {
+                        OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = tokens.colors.borderFocus.copy(alpha = tokens.opacity.strong),
+                            unfocusedBorderColor = tokens.colors.borderDefault.copy(alpha = tokens.opacity.medium),
+                            focusedContainerColor = tokens.colors.surface,
+                            unfocusedContainerColor = tokens.colors.surface,
+                            disabledContainerColor = tokens.colors.surface,
+                        )
+                    },
                 )
             }
         }
