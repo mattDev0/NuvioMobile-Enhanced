@@ -974,7 +974,7 @@ final class AppNavigationCoordinator: ObservableObject {
         }
         NativeTabBridgeKt.observeNativeTabBarVisible { [weak self] visible in
             guard let self else { return }
-            self.setTabBarVisible(visible.boolValue, animated: self.tabBarBehavior == .morphed)
+            self.setTabBarVisible(visible.boolValue, animated: self.tabBarBehavior.usesCompactPill)
         }
         allCoordinators.forEach { coordinator in
             coordinator.onReturnedToRoot = { [weak self] in
@@ -1023,7 +1023,7 @@ final class AppNavigationCoordinator: ObservableObject {
     }
 
     func requestTabBarVisible(_ visible: Bool) {
-        setTabBarVisible(visible, animated: tabBarBehavior == .morphed)
+        setTabBarVisible(visible, animated: tabBarBehavior.usesCompactPill)
     }
 
     func reloadTabBarVisibility() {
@@ -1036,7 +1036,7 @@ final class AppNavigationCoordinator: ObservableObject {
         ) as? Bool else {
             return
         }
-        setTabBarVisible(visible, animated: tabBarBehavior == .morphed)
+        setTabBarVisible(visible, animated: tabBarBehavior.usesCompactPill)
     }
 
     private func setTabBarVisible(_ visible: Bool, animated: Bool = false) {

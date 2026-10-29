@@ -55,9 +55,9 @@ enum class NuvioTabBarBehavior(
     val isEnabled: Boolean
         get() = this != OFF
 
-    /** Only AUTO_HIDE and MORPHED react to scrolling; STATIC keeps the bar pinned. */
+    /** AUTO_HIDE, MORPHED and COMPACT react to scrolling; STATIC keeps the bar pinned. */
     val respondsToScroll: Boolean
-        get() = this == AUTO_HIDE || this == MORPHED
+        get() = this == AUTO_HIDE || this == MORPHED || this == COMPACT
 
     companion object {
         val Default: NuvioTabBarBehavior = MORPHED

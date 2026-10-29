@@ -21,9 +21,7 @@ enum NuvioTabBarBehavior: String, CaseIterable {
 
     var usesCompactPill: Bool { self == .morphed || self == .compact }
 
-    var respondsToScroll: Bool { self == .autoHide || self == .morphed }
-
-    var showsTitles: Bool { self != .compact }
+    var respondsToScroll: Bool { self == .autoHide || self == .morphed || self == .compact }
 }
 
 struct NuvioTabBarItemMetrics: Equatable {
@@ -139,8 +137,10 @@ struct NuvioGlassTabBar: View {
         let tabs = appCoordinator.availableTabs
         let singleAccent = iconStore.accentColors.count <= 1
         let isCompactBehavior = appCoordinator.tabBarBehavior == .compact
-        let isBarCompact = isCompactHeight || isCompactBehavior
-        let showsTitles = appCoordinator.tabBarBehavior.showsTitles
+        // Like Android's adaptive bar: full bar with titles, shrinking to an icon-only pill while scrolling down.
+        let compactCollapsed = isCompactBehavior && !appCoordinator.isTabBarVisible
+        let isBarCompact = isCompactHeight || compactCollapsed
+        let showsTitles = !compactCollapsed
         let items = tabs.map { tab in
             NuvioSegmentedTabBarItem(
                 title: appCoordinator.title(for: tab),
@@ -152,7 +152,7 @@ struct NuvioGlassTabBar: View {
         }
         let contentKey = tabs.map { "\($0.rawValue):\(appCoordinator.title(for: $0))" }.joined(separator: "|")
             + "#\(iconStore.revision)#\(isBarCompact)#\(showsTitles)"
-        let barWidth: CGFloat? = isCompactBehavior ? (CGFloat(tabs.count) * 64 + 16) : nil
+        let barWidth: CGFloat? = compactCollapsed ? (CGFloat(tabs.count) * 64 + 16) : nil
         return NuvioSegmentedTabBar(
             items: items,
             contentKey: contentKey,
@@ -186,6 +186,7 @@ struct NuvioGlassTabBar: View {
             }
         )
         .frame(width: barWidth, height: NuvioSegmentedTabBar.height(compact: isBarCompact))
+        .animation(.spring(response: 0.32, dampingFraction: 0.86), value: compactCollapsed)
     }
 
     private func item(for tab: NuvioAppTab) -> some View {
