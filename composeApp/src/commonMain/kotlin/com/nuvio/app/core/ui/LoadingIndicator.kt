@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -29,6 +31,7 @@ import androidx.compose.ui.util.lerp
 
 private val LoadingEasing = CubicBezierEasing(0.333f, 0f, 0.667f, 1f)
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NuvioLoadingIndicator(
     modifier: Modifier = Modifier,
@@ -36,39 +39,46 @@ fun NuvioLoadingIndicator(
     size: Dp = NuvioTokens.Space.s40,
     active: Boolean = LocalScreenActive.current,
 ) {
-    val brush = if (color == Color.Unspecified) MaterialTheme.themePalette.accentBrush() else SolidColor(color)
-    Box(
-        modifier = modifier.size(size),
-        contentAlignment = Alignment.Center,
-    ) {
-        val frame = rememberLoadingIndicatorFrame(active)
-
-        Spacer(
-            modifier = Modifier
-                .fillMaxSize()
-                .drawWithCache {
-                    val scale = this.size.minDimension * 0.75f / 350f
-                    val center = Offset(this.size.width / 2f, this.size.height / 2f)
-                    val radius = 150f * scale
-                    val topLeft = center - Offset(radius, radius)
-                    val arcSize = Size(radius * 2f, radius * 2f)
-                    val stroke = Stroke(width = 50f * scale, cap = StrokeCap.Round)
-                    onDrawBehind {
-                        val currentFrame = frame.value.coerceIn(0f, 60f)
-                        val start = lerp(0f, 99f, LoadingEasing.transform(((currentFrame - 10f) / 50f).coerceIn(0f, 1f)))
-                        val end = lerp(1f, 100f, LoadingEasing.transform((currentFrame / 50f).coerceIn(0f, 1f)))
-                        drawArc(
-                            brush = brush,
-                            startAngle = -90f + currentFrame / 60f * 363f + start * 3.6f,
-                            sweepAngle = (end - start) * 3.6f,
-                            useCenter = false,
-                            topLeft = topLeft,
-                            size = arcSize,
-                            style = stroke,
-                        )
-                    }
-                },
+    if (LocalMaterialYou.current) {
+        LoadingIndicator(
+            modifier = modifier.size(size),
+            color = if (color == Color.Unspecified) MaterialTheme.colorScheme.primary else color,
         )
+    } else {
+        val brush = if (color == Color.Unspecified) MaterialTheme.themePalette.accentBrush() else SolidColor(color)
+        Box(
+            modifier = modifier.size(size),
+            contentAlignment = Alignment.Center,
+        ) {
+            val frame = rememberLoadingIndicatorFrame(active)
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawWithCache {
+                        val scale = this.size.minDimension * 0.75f / 350f
+                        val center = Offset(this.size.width / 2f, this.size.height / 2f)
+                        val radius = 150f * scale
+                        val topLeft = center - Offset(radius, radius)
+                        val arcSize = Size(radius * 2f, radius * 2f)
+                        val stroke = Stroke(width = 50f * scale, cap = StrokeCap.Round)
+                        onDrawBehind {
+                            val currentFrame = frame.value.coerceIn(0f, 60f)
+                            val start = lerp(0f, 99f, LoadingEasing.transform(((currentFrame - 10f) / 50f).coerceIn(0f, 1f)))
+                            val end = lerp(1f, 100f, LoadingEasing.transform((currentFrame / 50f).coerceIn(0f, 1f)))
+                            drawArc(
+                                brush = brush,
+                                startAngle = -90f + currentFrame / 60f * 363f + start * 3.6f,
+                                sweepAngle = (end - start) * 3.6f,
+                                useCenter = false,
+                                topLeft = topLeft,
+                                size = arcSize,
+                                style = stroke,
+                            )
+                        }
+                    },
+            )
+        }
     }
 }
 

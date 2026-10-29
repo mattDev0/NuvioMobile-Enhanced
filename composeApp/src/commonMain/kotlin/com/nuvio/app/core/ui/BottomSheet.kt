@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -127,31 +128,54 @@ fun NuvioModalBottomSheet(
         }
         val sheetGlassReady = sheetBackdrop != null && sheetBackdrop.backdrop.isReady && isLiquidGlassSupported()
         val currentSheetShape = sheetShape()
-        ModalBottomSheet(
-            onDismissRequest = onDismissRequest,
-            sheetState = sheetState,
-            shape = RectangleShape,
-            containerColor = Color.Transparent,
-            contentColor = contentColor,
-            scrimColor = tokens.colors.overlayScrim,
-            dragHandle = null,
-        ) {
-            CompositionLocalProvider(LocalBottomInsetsConsumed provides true) {
-                Column(
-                    modifier = modifier
-                        .padding(NuvioTokens.Space.s10)
-                        .clip(currentSheetShape)
-                        .nuvioSheetSurface(
-                            backdrop = sheetBackdrop?.backdrop,
-                            shape = currentSheetShape,
-                            containerColor = containerColor,
-                        )
-                        .then(if (sheetGlassReady) Modifier else Modifier.border(tokens.borders.thin, SurfaceEdge, currentSheetShape)),
-                ) {
-                    if (showDragHandle) {
-                        NuvioBottomSheetDragHandle(Modifier.align(Alignment.CenterHorizontally))
+        if (LocalMaterialYou.current) {
+            ModalBottomSheet(
+                onDismissRequest = onDismissRequest,
+                sheetState = sheetState,
+                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                contentColor = contentColor,
+                scrimColor = tokens.colors.overlayScrim,
+                dragHandle = if (showDragHandle) { { BottomSheetDefaults.DragHandle() } } else null,
+                modifier = modifier,
+            ) {
+                CompositionLocalProvider(LocalBottomInsetsConsumed provides true) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = NuvioTokens.Space.s16, vertical = NuvioTokens.Space.s8),
+                    ) {
+                        content()
                     }
-                    content()
+                }
+            }
+        } else {
+            ModalBottomSheet(
+                onDismissRequest = onDismissRequest,
+                sheetState = sheetState,
+                shape = RectangleShape,
+                containerColor = Color.Transparent,
+                contentColor = contentColor,
+                scrimColor = tokens.colors.overlayScrim,
+                dragHandle = null,
+            ) {
+                CompositionLocalProvider(LocalBottomInsetsConsumed provides true) {
+                    Column(
+                        modifier = modifier
+                            .padding(NuvioTokens.Space.s10)
+                            .clip(currentSheetShape)
+                            .nuvioSheetSurface(
+                                backdrop = sheetBackdrop?.backdrop,
+                                shape = currentSheetShape,
+                                containerColor = containerColor,
+                            )
+                            .then(if (sheetGlassReady) Modifier else Modifier.border(tokens.borders.thin, SurfaceEdge, currentSheetShape)),
+                    ) {
+                        if (showDragHandle) {
+                            NuvioBottomSheetDragHandle(Modifier.align(Alignment.CenterHorizontally))
+                        }
+                        content()
+                    }
                 }
             }
         }

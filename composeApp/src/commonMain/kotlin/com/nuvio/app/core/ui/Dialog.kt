@@ -53,35 +53,69 @@ fun DialogSurface(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val tokens = MaterialTheme.nuvio
-    BasicAlertDialog(onDismissRequest = onDismissRequest, properties = properties) {
-        Surface(
-            modifier = modifier
-                .fillMaxWidth()
-                .widthIn(max = tokens.components.dialogMaxWidth),
-            shape = tokens.shapes.dialog,
-            color = tokens.colors.surfaceDialog,
-            contentColor = tokens.colors.textPrimary,
-            border = BorderStroke(tokens.borders.thin, SurfaceEdge),
-        ) {
-            Column(
-                modifier = Modifier.padding(tokens.spacing.dialogPadding),
-                verticalArrangement = Arrangement.spacedBy(tokens.spacing.listGap),
+    if (LocalMaterialYou.current) {
+        BasicAlertDialog(onDismissRequest = onDismissRequest, properties = properties) {
+            Surface(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .widthIn(max = tokens.components.dialogMaxWidth),
+                shape = RoundedCornerShape(28.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.onSurface,
             ) {
-                if (title != null) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = tokens.colors.textPrimary,
-                    )
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    if (title != null) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                    if (message != null) {
+                        Text(
+                            text = message,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    content()
                 }
-                if (message != null) {
-                    Text(
-                        text = message,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = tokens.colors.textSecondary,
-                    )
+            }
+        }
+    } else {
+        BasicAlertDialog(onDismissRequest = onDismissRequest, properties = properties) {
+            Surface(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .widthIn(max = tokens.components.dialogMaxWidth),
+                shape = tokens.shapes.dialog,
+                color = tokens.colors.surfaceDialog,
+                contentColor = tokens.colors.textPrimary,
+                border = BorderStroke(tokens.borders.thin, SurfaceEdge),
+            ) {
+                Column(
+                    modifier = Modifier.padding(tokens.spacing.dialogPadding),
+                    verticalArrangement = Arrangement.spacedBy(tokens.spacing.listGap),
+                ) {
+                    if (title != null) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = tokens.colors.textPrimary,
+                        )
+                    }
+                    if (message != null) {
+                        Text(
+                            text = message,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = tokens.colors.textSecondary,
+                        )
+                    }
+                    content()
                 }
-                content()
             }
         }
     }
@@ -132,38 +166,76 @@ fun DialogButton(
     loading: Boolean = false,
 ) {
     val tokens = MaterialTheme.nuvio
-    val containerColor = when (style) {
-        DialogButtonStyle.Primary -> tokens.colors.accent
-        DialogButtonStyle.Secondary -> tokens.colors.textPrimary.copy(alpha = tokens.opacity.hover)
-        DialogButtonStyle.Destructive -> tokens.colors.danger
-    }
-    val contentColor = if (style == DialogButtonStyle.Secondary) tokens.colors.textPrimary else tokens.colors.onAccent
-    Button(
-        onClick = onClick,
-        modifier = modifier.heightIn(min = NuvioTokens.Space.s48),
-        enabled = enabled && !loading,
-        shape = tokens.shapes.button,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = contentColor,
-            disabledContainerColor = containerColor.copy(alpha = containerColor.alpha * tokens.opacity.disabled),
-            disabledContentColor = contentColor.copy(alpha = tokens.opacity.disabled),
-        ),
-        contentPadding = PaddingValues(horizontal = NuvioTokens.Space.s16),
-    ) {
-        if (loading) {
-            NuvioLoadingIndicator(
-                modifier = Modifier.size(tokens.icons.sm),
-                color = contentColor,
-            )
-            Spacer(modifier = Modifier.width(NuvioTokens.Space.s8))
+    if (LocalMaterialYou.current) {
+        val containerColor = when (style) {
+            DialogButtonStyle.Primary -> MaterialTheme.colorScheme.primary
+            DialogButtonStyle.Secondary -> MaterialTheme.colorScheme.surfaceContainerHighest
+            DialogButtonStyle.Destructive -> MaterialTheme.colorScheme.error
         }
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        val contentColor = when (style) {
+            DialogButtonStyle.Primary -> MaterialTheme.colorScheme.onPrimary
+            DialogButtonStyle.Secondary -> MaterialTheme.colorScheme.onSurface
+            DialogButtonStyle.Destructive -> MaterialTheme.colorScheme.onError
+        }
+        Button(
+            onClick = onClick,
+            modifier = modifier.heightIn(min = 44.dp),
+            enabled = enabled && !loading,
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = containerColor,
+                contentColor = contentColor,
+            ),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+        ) {
+            if (loading) {
+                NuvioLoadingIndicator(
+                    modifier = Modifier.size(tokens.icons.sm),
+                    color = contentColor,
+                )
+                Spacer(modifier = Modifier.width(NuvioTokens.Space.s8))
+            }
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    } else {
+        val containerColor = when (style) {
+            DialogButtonStyle.Primary -> tokens.colors.accent
+            DialogButtonStyle.Secondary -> tokens.colors.textPrimary.copy(alpha = tokens.opacity.hover)
+            DialogButtonStyle.Destructive -> tokens.colors.danger
+        }
+        val contentColor = if (style == DialogButtonStyle.Secondary) tokens.colors.textPrimary else tokens.colors.onAccent
+        Button(
+            onClick = onClick,
+            modifier = modifier.heightIn(min = NuvioTokens.Space.s48),
+            enabled = enabled && !loading,
+            shape = tokens.shapes.button,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = containerColor,
+                contentColor = contentColor,
+                disabledContainerColor = containerColor.copy(alpha = containerColor.alpha * tokens.opacity.disabled),
+                disabledContentColor = contentColor.copy(alpha = tokens.opacity.disabled),
+            ),
+            contentPadding = PaddingValues(horizontal = NuvioTokens.Space.s16),
+        ) {
+            if (loading) {
+                NuvioLoadingIndicator(
+                    modifier = Modifier.size(tokens.icons.sm),
+                    color = contentColor,
+                )
+                Spacer(modifier = Modifier.width(NuvioTokens.Space.s8))
+            }
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 

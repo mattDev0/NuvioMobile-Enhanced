@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -53,34 +54,57 @@ fun NuvioDropdownChip(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
 
-    Row(
-        modifier = modifier
-            .clip(tokens.shapes.compactCard)
-            .background(tokens.colors.surface)
-            .then(
-                if (enabled) {
-                    Modifier.clickable { isSheetVisible = true }
-                } else {
-                    Modifier
-                },
+    if (LocalMaterialYou.current) {
+        AssistChip(
+            onClick = { if (enabled) isSheetVisible = true },
+            label = {
+                Text(
+                    text = label,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.KeyboardArrowDown,
+                    contentDescription = null,
+                    modifier = Modifier.size(NuvioTokens.Icon.sm + NuvioTokens.Space.s2),
+                )
+            },
+            modifier = modifier,
+            enabled = enabled,
+            shape = MaterialTheme.shapes.small,
+        )
+    } else {
+        Row(
+            modifier = modifier
+                .clip(tokens.shapes.compactCard)
+                .background(tokens.colors.surface)
+                .then(
+                    if (enabled) {
+                        Modifier.clickable { isSheetVisible = true }
+                    } else {
+                        Modifier
+                    },
+                )
+                .padding(horizontal = NuvioTokens.Space.s12, vertical = tokens.components.chipVerticalPadding),
+            horizontalArrangement = Arrangement.spacedBy(NuvioTokens.Space.s6),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                color = if (enabled) tokens.colors.textPrimary else tokens.colors.textDisabled,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
-            .padding(horizontal = NuvioTokens.Space.s12, vertical = tokens.components.chipVerticalPadding),
-        horizontalArrangement = Arrangement.spacedBy(NuvioTokens.Space.s6),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelLarge,
-            color = if (enabled) tokens.colors.textPrimary else tokens.colors.textDisabled,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Icon(
-            imageVector = Icons.Rounded.KeyboardArrowDown,
-            contentDescription = null,
-            modifier = Modifier.size(NuvioTokens.Icon.sm + NuvioTokens.Space.s2),
-            tint = if (enabled) tokens.colors.textMuted else tokens.colors.borderDefault,
-        )
+            Icon(
+                imageVector = Icons.Rounded.KeyboardArrowDown,
+                contentDescription = null,
+                modifier = Modifier.size(NuvioTokens.Icon.sm + NuvioTokens.Space.s2),
+                tint = if (enabled) tokens.colors.textMuted else tokens.colors.borderDefault,
+            )
+        }
     }
 
     if (isSheetVisible) {

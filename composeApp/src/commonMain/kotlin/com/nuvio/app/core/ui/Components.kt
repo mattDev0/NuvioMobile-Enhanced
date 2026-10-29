@@ -32,15 +32,20 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -270,20 +275,37 @@ fun NuvioIconActionButton(
     tint: Color = MaterialTheme.nuvio.colors.textPrimary,
     onClick: () -> Unit = {},
 ) {
-    val tokens = MaterialTheme.nuvio
-    IconButton(
-        modifier = modifier
-            .background(
-                color = tokens.colors.background.copy(alpha = 0.001f),
-                shape = tokens.shapes.avatar,
+    if (LocalMaterialYou.current) {
+        FilledTonalIconButton(
+            onClick = onClick,
+            modifier = modifier,
+            colors = IconButtonDefaults.filledTonalIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = if (tint == MaterialTheme.nuvio.colors.textPrimary) MaterialTheme.colorScheme.onSurface else tint,
             ),
-        onClick = onClick,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            tint = tint,
-        )
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                tint = if (tint == MaterialTheme.nuvio.colors.textPrimary) MaterialTheme.colorScheme.onSurface else tint,
+            )
+        }
+    } else {
+        val tokens = MaterialTheme.nuvio
+        IconButton(
+            modifier = modifier
+                .background(
+                    color = tokens.colors.background.copy(alpha = 0.001f),
+                    shape = tokens.shapes.avatar,
+                ),
+            onClick = onClick,
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                tint = tint,
+            )
+        }
     }
 }
 
@@ -300,23 +322,42 @@ fun NuvioBackButton(
 ) {
     if (LocalUseNativeNavigation.current && !LocalNativeNavigationBarHidden.current) return
 
-    Box(
-        modifier = modifier
-            .size(buttonSize)
-            .clip(shape)
-            .background(containerColor)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-            contentDescription = contentDescription,
-            tint = contentColor,
-            modifier = Modifier.size(iconSize),
-        )
+    if (LocalMaterialYou.current) {
+        FilledTonalIconButton(
+            onClick = onClick,
+            modifier = modifier.size(buttonSize),
+            colors = IconButtonDefaults.filledTonalIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ),
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                contentDescription = contentDescription,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(iconSize),
+            )
+        }
+    } else {
+        Box(
+            modifier = modifier
+                .size(buttonSize)
+                .clip(shape)
+                .background(containerColor)
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                contentDescription = contentDescription,
+                tint = contentColor,
+                modifier = Modifier.size(iconSize),
+            )
+        }
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun NuvioPrimaryButton(
     text: String,
@@ -324,39 +365,66 @@ fun NuvioPrimaryButton(
     enabled: Boolean = true,
     onClick: () -> Unit = {},
 ) {
-    val tokens = MaterialTheme.nuvio
-    val palette = MaterialTheme.themePalette
-    val containerBrush = if (enabled) {
-        palette.accentBrush()
+    if (LocalMaterialYou.current) {
+        Button(
+            onClick = onClick,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(NuvioTokens.Space.s48 + NuvioTokens.Space.s4),
+            enabled = enabled,
+            shape = ButtonDefaults.shapes(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
+        ) {
+            AnimatedContent(
+                targetState = text,
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                label = "buttonText",
+            ) { animatedText ->
+                Text(
+                    text = animatedText,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
     } else {
-        palette.accentBrush(alpha = tokens.opacity.disabled)
-    }
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(NuvioTokens.Space.s48 + NuvioTokens.Space.s4)
-            .clip(tokens.shapes.button)
-            .background(containerBrush),
-        enabled = enabled,
-        shape = tokens.shapes.button,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = tokens.colors.onAccent,
-            disabledContainerColor = Color.Transparent,
-            disabledContentColor = tokens.colors.onAccent.copy(alpha = tokens.opacity.disabled),
-        ),
-    ) {
-        AnimatedContent(
-            targetState = text,
-            transitionSpec = { fadeIn() togetherWith fadeOut() },
-            label = "buttonText",
-        ) { animatedText ->
-            Text(
-                text = animatedText,
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-            )
+        val tokens = MaterialTheme.nuvio
+        val palette = MaterialTheme.themePalette
+        val containerBrush = if (enabled) {
+            palette.accentBrush()
+        } else {
+            palette.accentBrush(alpha = tokens.opacity.disabled)
+        }
+        Button(
+            onClick = onClick,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(NuvioTokens.Space.s48 + NuvioTokens.Space.s4)
+                .clip(tokens.shapes.button)
+                .background(containerBrush),
+            enabled = enabled,
+            shape = tokens.shapes.button,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = tokens.colors.onAccent,
+                disabledContainerColor = Color.Transparent,
+                disabledContentColor = tokens.colors.onAccent.copy(alpha = tokens.opacity.disabled),
+            ),
+        ) {
+            AnimatedContent(
+                targetState = text,
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                label = "buttonText",
+            ) { animatedText ->
+                Text(
+                    text = animatedText,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }
@@ -370,30 +438,56 @@ fun NuvioInputField(
     trailingContent: (@Composable (() -> Unit))? = null,
     containerColor: Color = MaterialTheme.nuvio.colors.surfaceCard,
 ) {
-    val tokens = MaterialTheme.nuvio
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier.fillMaxWidth(),
-        singleLine = true,
-        shape = nuvioShape(default = RoundedCornerShape(NuvioTokens.Radius.lg), materialYou = MaterialTheme.shapes.medium),
-        placeholder = {
-            Text(
-                text = placeholder,
-                color = tokens.colors.textMuted,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-        },
-        textStyle = MaterialTheme.typography.bodyLarge.copy(color = tokens.colors.textPrimary),
-        trailingIcon = trailingContent,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = tokens.colors.borderFocus,
-            unfocusedBorderColor = tokens.colors.borderDefault,
-            focusedContainerColor = containerColor,
-            unfocusedContainerColor = containerColor,
-            cursorColor = tokens.colors.accent,
-        ),
-    )
+    if (LocalMaterialYou.current) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier.fillMaxWidth(),
+            singleLine = true,
+            shape = MaterialTheme.shapes.medium,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            },
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+            trailingIcon = trailingContent,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                cursorColor = MaterialTheme.colorScheme.primary,
+            ),
+        )
+    } else {
+        val tokens = MaterialTheme.nuvio
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier.fillMaxWidth(),
+            singleLine = true,
+            shape = RoundedCornerShape(NuvioTokens.Radius.lg),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    color = tokens.colors.textMuted,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            },
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = tokens.colors.textPrimary),
+            trailingIcon = trailingContent,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = tokens.colors.borderFocus,
+                unfocusedBorderColor = tokens.colors.borderDefault,
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                cursorColor = tokens.colors.accent,
+            ),
+        )
+    }
 }
 
 @Composable
@@ -459,26 +553,71 @@ fun NuvioStatusModal(
 ) {
     if (!isVisible) return
 
-    DialogSurface(
-        onDismissRequest = {
-            if (!isBusy) {
-                onDismiss?.invoke() ?: onConfirm()
+    if (LocalMaterialYou.current) {
+        AlertDialog(
+            onDismissRequest = {
+                if (!isBusy) {
+                    onDismiss?.invoke() ?: onConfirm()
+                }
+            },
+            title = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            },
+            text = {
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = onConfirm,
+                    enabled = !isBusy,
+                ) {
+                    Text(
+                        text = confirmText,
+                        color = if (destructive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    )
+                }
+            },
+            dismissButton = if (!isBusy && dismissText != null && onDismiss != null) {
+                {
+                    TextButton(onClick = onDismiss) {
+                        Text(text = dismissText)
+                    }
+                }
+            } else null,
+            shape = RoundedCornerShape(28.dp),
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            modifier = modifier,
+        )
+    } else {
+        DialogSurface(
+            onDismissRequest = {
+                if (!isBusy) {
+                    onDismiss?.invoke() ?: onConfirm()
+                }
+            },
+            modifier = modifier,
+            title = title,
+            message = message,
+        ) {
+            DialogButtons {
+                if (!isBusy && dismissText != null && onDismiss != null) {
+                    DialogButton(text = dismissText, onClick = onDismiss)
+                }
+                DialogButton(
+                    text = confirmText,
+                    onClick = onConfirm,
+                    style = if (destructive) DialogButtonStyle.Destructive else DialogButtonStyle.Primary,
+                    loading = isBusy,
+                )
             }
-        },
-        modifier = modifier,
-        title = title,
-        message = message,
-    ) {
-        DialogButtons {
-            if (!isBusy && dismissText != null && onDismiss != null) {
-                DialogButton(text = dismissText, onClick = onDismiss)
-            }
-            DialogButton(
-                text = confirmText,
-                onClick = onConfirm,
-                style = if (destructive) DialogButtonStyle.Destructive else DialogButtonStyle.Primary,
-                loading = isBusy,
-            )
         }
     }
 }
@@ -522,25 +661,49 @@ fun NuvioToastHost(
         exit = fadeOut() + slideOutVertically { -it },
     ) {
         val currentToast = renderedToast ?: return@AnimatedVisibility
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = statusBarTop + tokens.spacing.listGap)
-                .padding(horizontal = tokens.spacing.screenHorizontal),
-            contentAlignment = Alignment.TopCenter,
-        ) {
-            Surface(
-                shape = nuvioShape(default = RoundedCornerShape(NuvioTokens.Radius.xl), materialYou = RoundedCornerShape(12.dp)),
-                color = tokens.colors.surfacePopover,
-                tonalElevation = tokens.elevation.raised,
-                shadowElevation = tokens.elevation.overlay,
+        if (LocalMaterialYou.current) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = tokens.spacing.screenHorizontal)
+                    .padding(bottom = NuvioTokens.Space.s24),
+                contentAlignment = Alignment.BottomCenter,
             ) {
-                Text(
-                    text = currentToast.message,
-                    modifier = Modifier.padding(horizontal = NuvioTokens.Space.s16, vertical = NuvioTokens.Space.s12),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = tokens.colors.textPrimary,
-                )
+                Surface(
+                    shape = MaterialTheme.shapes.small,
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    contentColor = MaterialTheme.colorScheme.inverseOnSurface,
+                    shadowElevation = 6.dp,
+                ) {
+                    Text(
+                        text = currentToast.message,
+                        modifier = Modifier.padding(horizontal = NuvioTokens.Space.s16, vertical = NuvioTokens.Space.s14),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                    )
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = statusBarTop + tokens.spacing.listGap)
+                    .padding(horizontal = tokens.spacing.screenHorizontal),
+                contentAlignment = Alignment.TopCenter,
+            ) {
+                Surface(
+                    shape = nuvioShape(default = RoundedCornerShape(NuvioTokens.Radius.xl), materialYou = RoundedCornerShape(12.dp)),
+                    color = tokens.colors.surfacePopover,
+                    tonalElevation = tokens.elevation.raised,
+                    shadowElevation = tokens.elevation.overlay,
+                ) {
+                    Text(
+                        text = currentToast.message,
+                        modifier = Modifier.padding(horizontal = NuvioTokens.Space.s16, vertical = NuvioTokens.Space.s12),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = tokens.colors.textPrimary,
+                    )
+                }
             }
         }
     }
