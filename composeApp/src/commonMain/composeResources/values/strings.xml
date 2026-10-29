@@ -738,6 +738,8 @@
     <string name="settings_tab_bar_behavior_off_description">Use the standard in-app navigation bar.</string>
     <string name="settings_tab_bar_behavior_static">Static</string>
     <string name="settings_tab_bar_behavior_static_description">Always visible while you browse.</string>
+    <string name="settings_tab_bar_behavior_compact">Compact</string>
+    <string name="settings_tab_bar_behavior_compact_description">A small floating bar with icons only, like on Android.</string>
     <string name="settings_tab_bar_behavior_auto_hide">Auto hide</string>
     <string name="settings_tab_bar_behavior_auto_hide_description">Slides away when you scroll down, returns when you scroll up.</string>
     <string name="settings_tab_bar_behavior_morphed">Morphed</string>

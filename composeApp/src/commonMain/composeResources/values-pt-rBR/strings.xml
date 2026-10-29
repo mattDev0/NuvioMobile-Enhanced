@@ -729,6 +729,8 @@
     <string name="settings_tab_bar_behavior_off_description">Usa a barra de navegação padrão do aplicativo.</string>
     <string name="settings_tab_bar_behavior_static">Estática</string>
     <string name="settings_tab_bar_behavior_static_description">Permanece sempre visível durante a navegação.</string>
+    <string name="settings_tab_bar_behavior_compact">Compacta</string>
+    <string name="settings_tab_bar_behavior_compact_description">Uma pequena barra flutuante apenas com ícones, como no Android.</string>
     <string name="settings_tab_bar_behavior_auto_hide">Ocultar automaticamente</string>
     <string name="settings_tab_bar_behavior_auto_hide_description">Desaparece ao rolar para baixo e volta ao rolar para cima.</string>
     <string name="settings_tab_bar_behavior_morphed">Adaptável</string>

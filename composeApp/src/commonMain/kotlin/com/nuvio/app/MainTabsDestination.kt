@@ -38,6 +38,7 @@ import com.nuvio.app.core.ui.rememberNuvioNavBarScrollState
 import com.nuvio.app.features.profiles.NuvioProfile
 import com.nuvio.app.features.profiles.ProfileSwitcherTab
 import com.nuvio.app.features.settings.NavBarStyle
+import com.nuvio.app.features.settings.NuvioTabBarBehavior
 import com.nuvio.app.features.settings.ThemeSettingsRepository
 import com.kyant.backdrop.Backdrop
 import com.nuvio.app.core.ui.glass.nuvioBackdropSource
@@ -93,6 +94,7 @@ internal fun MainTabsDestination(
         }
         val tabsRouteActive = rootRouteActive
         val navBarScrollState = rememberNuvioNavBarScrollState()
+        val tabBarBehavior by remember { ThemeSettingsRepository.tabBarBehavior }.collectAsStateWithLifecycle()
         val navBarStyleSetting by remember { ThemeSettingsRepository.navBarStyle }.collectAsStateWithLifecycle()
         val navBarGlowEnabled by ThemeSettingsRepository.navBarGlowEnabled.collectAsStateWithLifecycle()
         val navBarPosition by ThemeSettingsRepository.navBarPosition.collectAsStateWithLifecycle()
@@ -139,7 +141,7 @@ internal fun MainTabsDestination(
             Box(modifier = Modifier.fillMaxSize()) {
                 CompositionLocalProvider(
                     LocalNuvioBottomNavigationOverlayPadding provides when {
-                        tabsRouteActive && useNativeBottomTabs -> 49.dp
+                        tabsRouteActive && useNativeBottomTabs -> if (tabBarBehavior == NuvioTabBarBehavior.COMPACT) 44.dp else 49.dp
                         // A top pill floats over the content like the tablet CLASSIC bar, so
                         // nothing needs to be kept clear at the bottom.
                         tabsRouteActive && navBarStyleSetting != NavBarStyle.CLASSIC && !floatingBarOnTop -> 72.dp

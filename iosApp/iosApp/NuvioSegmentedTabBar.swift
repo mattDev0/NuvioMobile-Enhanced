@@ -24,6 +24,7 @@ struct NuvioSegmentedTabBar: UIViewRepresentable {
     let selectedIndex: Int
     let isExpanded: Bool
     let isCompact: Bool
+    var showsTitles: Bool = true
     let accentColor: UIColor
     let indicatorColor: UIColor
     let hapticsEnabled: () -> Bool
@@ -43,7 +44,8 @@ struct NuvioSegmentedTabBar: UIViewRepresentable {
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: NuvioSegmentedTabBarView, context: Context) -> CGSize? {
-        CGSize(width: proposal.width ?? 360, height: Self.height(compact: isCompact))
+        let defaultWidth = showsTitles ? (proposal.width ?? 360) : (CGFloat(items.count) * 64 + 16)
+        return CGSize(width: defaultWidth, height: Self.height(compact: isCompact))
     }
 
     private func apply(to view: NuvioSegmentedTabBarView) {
@@ -55,9 +57,10 @@ struct NuvioSegmentedTabBar: UIViewRepresentable {
         control.activeTintColor = accentColor
         control.indicatorColor = indicatorColor
         view.setCompact(isCompact)
+        view.setShowsTitles(showsTitles)
         if view.appliedContentKey != contentKey {
             view.appliedContentKey = contentKey
-            control.setItems(items, horizontal: isCompact)
+            control.setItems(items, horizontal: isCompact, showsTitles: showsTitles)
         }
         if !control.isTrackingTouch, control.selectedSegmentIndex != selectedIndex {
             control.selectedSegmentIndex = selectedIndex
@@ -88,6 +91,7 @@ final class NuvioSegmentedTabBarView: UIView {
     private let collapsedIcon = UIImageView()
     private var isExpanded = true
     private var isCompact = false
+    private var showsTitles = true
     private var hasLaidOut = false
     private var leadingConstraint: NSLayoutConstraint!
     private var widthConstraint: NSLayoutConstraint!
@@ -162,10 +166,17 @@ final class NuvioSegmentedTabBarView: UIView {
         applyState()
     }
 
+    func setShowsTitles(_ shows: Bool) {
+        guard shows != showsTitles else { return }
+        showsTitles = shows
+        applyState()
+    }
+
     private var expandedFrame: (leading: CGFloat, width: CGFloat) {
         let available = max(bounds.width - Self.expandedInset * 2, collapsedSize.width)
         guard isCompact else { return (Self.expandedInset, available) }
-        let width = min(available, max(segmentedControl.preferredCompactWidth, collapsedSize.width))
+        let preferred = showsTitles ? segmentedControl.preferredCompactWidth : available
+        let width = min(available, max(preferred, collapsedSize.width))
         return ((bounds.width - width) / 2, width)
     }
 
@@ -303,35 +314,57 @@ final class NuvioTabSegmentedControl: UISegmentedControl {
         return CGFloat(numberOfSegments) * (widest + 24) + 4
     }
 
-    func setItems(_ items: [NuvioSegmentedTabBarItem], horizontal: Bool) {
+    private var currentItems: [NuvioSegmentedTabBarItem] = []
+
+    func setItems(_ items: [NuvioSegmentedTabBarItem], horizontal: Bool, showsTitles: Bool = true) {
+        currentItems = items
         let keepIndex = selectedSegmentIndex
         if numberOfSegments != items.count {
             removeAllSegments()
             for (index, item) in items.enumerated() {
-                insertSegment(withTitle: item.title, at: index, animated: false)
+                insertSegment(withTitle: showsTitles ? item.title : "", at: index, animated: false)
             }
         } else {
             for (index, item) in items.enumerated() {
-                setTitle(item.title, forSegmentAt: index)
+                setTitle(showsTitles ? item.title : "", forSegmentAt: index)
             }
         }
         if keepIndex >= 0, keepIndex < numberOfSegments {
             selectedSegmentIndex = keepIndex
         }
 
-        for segment in segmentViews() {
+        let segs = segmentViews()
+        for (index, item) in items.enumerated() {
+            if segs.indices.contains(index) {
+                segs[index].accessibilityLabel = item.title
+            }
+        }
+
+        for segment in segs {
             segment.viewWithTag(Self.baseViewTag)?.removeFromSuperview()
             segment.viewWithTag(Self.accentViewTag)?.removeFromSuperview()
         }
         cachedLensView = nil
         baseViews = items.map {
-            let view = NuvioTabItemContentView(title: $0.title, image: $0.baseImage, tintsImage: $0.tintsBaseImage, horizontal: horizontal)
+            let view = NuvioTabItemContentView(
+                title: $0.title,
+                image: $0.baseImage,
+                tintsImage: $0.tintsBaseImage,
+                horizontal: horizontal,
+                showsTitle: showsTitles
+            )
             view.tintColor = .white
             view.drawsLegibilityShadow = true
             return view
         }
         accentViews = items.map {
-            let view = NuvioTabItemContentView(title: $0.title, image: $0.accentImage, tintsImage: $0.tintsAccentImage, horizontal: horizontal)
+            let view = NuvioTabItemContentView(
+                title: $0.title,
+                image: $0.accentImage,
+                tintsImage: $0.tintsAccentImage,
+                horizontal: horizontal,
+                showsTitle: showsTitles
+            )
             view.tintColor = activeTintColor
             return view
         }
@@ -394,6 +427,9 @@ final class NuvioTabSegmentedControl: UISegmentedControl {
         let segments = segmentViews()
         guard segments.count == baseViews.count, segments.count == accentViews.count else { return }
         for (index, segment) in segments.enumerated() {
+            if currentItems.indices.contains(index) {
+                segment.accessibilityLabel = currentItems[index].title
+            }
             if segment.viewWithTag(Self.baseViewTag) == nil {
                 attach(baseViews[index], tag: Self.baseViewTag, to: segment)
             }
@@ -604,17 +640,19 @@ final class NuvioTabItemContentView: UIView {
     private let image: UIImage
     private let tintsImage: Bool
     private let horizontal: Bool
+    private let showsTitle: Bool
     var drawsLegibilityShadow = false
 
     private static let iconSize: CGFloat = 24
     private static let iconArea: CGFloat = 28
     private let font = UIFont.systemFont(ofSize: 11, weight: .medium)
 
-    init(title: String, image: UIImage, tintsImage: Bool, horizontal: Bool = false) {
+    init(title: String, image: UIImage, tintsImage: Bool, horizontal: Bool = false, showsTitle: Bool = true) {
         self.title = title
         self.image = image
         self.tintsImage = tintsImage
         self.horizontal = horizontal
+        self.showsTitle = showsTitle
         super.init(frame: .zero)
         isOpaque = false
         isUserInteractionEnabled = false
@@ -626,6 +664,7 @@ final class NuvioTabItemContentView: UIView {
         image = UIImage()
         tintsImage = true
         horizontal = false
+        showsTitle = true
         super.init(coder: coder)
         isHidden = true
     }
@@ -638,6 +677,9 @@ final class NuvioTabItemContentView: UIView {
     private static let horizontalGap: CGFloat = 6
 
     override var intrinsicContentSize: CGSize {
+        if !showsTitle {
+            return CGSize(width: Self.iconSize, height: Self.iconSize)
+        }
         let text = (title as NSString).size(withAttributes: [.font: font])
         if horizontal {
             return CGSize(
@@ -659,6 +701,23 @@ final class NuvioTabItemContentView: UIView {
         let iconSize = aspect >= 1
             ? CGSize(width: Self.iconSize, height: Self.iconSize / aspect)
             : CGSize(width: Self.iconSize * aspect, height: Self.iconSize)
+
+        if !showsTitle {
+            let iconRect = CGRect(
+                x: (bounds.width - iconSize.width) / 2,
+                y: (bounds.height - iconSize.height) / 2,
+                width: iconSize.width,
+                height: iconSize.height
+            )
+            if tintsImage {
+                color.setFill()
+                image.withRenderingMode(.alwaysTemplate).withTintColor(color).draw(in: iconRect)
+            } else {
+                image.draw(in: iconRect)
+            }
+            return
+        }
+
         let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
         let textSize = (title as NSString).size(withAttributes: attributes)
 

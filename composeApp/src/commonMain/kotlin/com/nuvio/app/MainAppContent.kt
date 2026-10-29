@@ -169,6 +169,7 @@ import com.nuvio.app.features.settings.LicensesAttributionsSettingsScreen
 import com.nuvio.app.features.settings.MetaScreenSettingsScreen
 import com.nuvio.app.features.settings.PluginsSettingsScreen
 import com.nuvio.app.features.settings.SupportersContributorsSettingsScreen
+import com.nuvio.app.features.settings.NuvioTabBarBehavior
 import com.nuvio.app.features.settings.ThemeSettingsRepository
 import com.nuvio.app.features.whatsnew.WhatsNewSettingsScreen
 import com.nuvio.app.features.streams.BingeGroupCacheRepository
@@ -1539,9 +1540,10 @@ internal fun MainAppContent(
             val settingsRouteBarVisible = currentRoute is SettingsDestinationRoute && !nativeTabBarOwnsChrome
             val settingsRouteBarBackdrop = rememberNuvioBackdrop()
             var settingsRouteBarOverlay by remember { mutableStateOf(0.dp) }
+            val tabBarBehavior by remember { ThemeSettingsRepository.tabBarBehavior }.collectAsStateWithLifecycle()
             val settingsRouteBottomOverlay = when {
                 currentRoute !is SettingsDestinationRoute -> 0.dp
-                nativeTabBarOwnsChrome -> 49.dp
+                nativeTabBarOwnsChrome -> if (tabBarBehavior == NuvioTabBarBehavior.COMPACT) 44.dp else 49.dp
                 else -> settingsRouteBarOverlay
             }
             Box(

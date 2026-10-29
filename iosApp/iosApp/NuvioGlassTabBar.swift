@@ -5,6 +5,7 @@ import ComposeApp
 enum NuvioTabBarBehavior: String, CaseIterable {
     case off
     case `static`
+    case compact
     case autoHide = "auto_hide"
     case morphed
 
@@ -18,9 +19,11 @@ enum NuvioTabBarBehavior: String, CaseIterable {
 
     var isEnabled: Bool { self != .off }
 
-    var usesCompactPill: Bool { self == .morphed }
+    var usesCompactPill: Bool { self == .morphed || self == .compact }
 
     var respondsToScroll: Bool { self == .autoHide || self == .morphed }
+
+    var showsTitles: Bool { self != .compact }
 }
 
 struct NuvioTabBarItemMetrics: Equatable {
@@ -84,7 +87,7 @@ struct NuvioGlassTabBar: View {
     }
 
     private var isExpanded: Bool {
-        appCoordinator.isTabBarVisible
+        appCoordinator.tabBarBehavior == .compact ? true : appCoordinator.isTabBarVisible
     }
 
     private var visibleTabs: [NuvioAppTab] {
@@ -135,6 +138,9 @@ struct NuvioGlassTabBar: View {
     private var segmentedBar: some View {
         let tabs = appCoordinator.availableTabs
         let singleAccent = iconStore.accentColors.count <= 1
+        let isCompactBehavior = appCoordinator.tabBarBehavior == .compact
+        let isBarCompact = isCompactHeight || isCompactBehavior
+        let showsTitles = appCoordinator.tabBarBehavior.showsTitles
         let items = tabs.map { tab in
             NuvioSegmentedTabBarItem(
                 title: appCoordinator.title(for: tab),
@@ -145,13 +151,15 @@ struct NuvioGlassTabBar: View {
             )
         }
         let contentKey = tabs.map { "\($0.rawValue):\(appCoordinator.title(for: $0))" }.joined(separator: "|")
-            + "#\(iconStore.revision)#\(isCompactHeight)"
+            + "#\(iconStore.revision)#\(isBarCompact)#\(showsTitles)"
+        let barWidth: CGFloat? = isCompactBehavior ? (CGFloat(tabs.count) * 64 + 16) : nil
         return NuvioSegmentedTabBar(
             items: items,
             contentKey: contentKey,
             selectedIndex: tabs.firstIndex(of: selectedTab) ?? 0,
-            isExpanded: isExpanded || hidesWhenCollapsed,
-            isCompact: isCompactHeight,
+            isExpanded: isCompactBehavior ? true : (isExpanded || hidesWhenCollapsed),
+            isCompact: isBarCompact,
+            showsTitles: showsTitles,
             accentColor: iconStore.accentColor,
             indicatorColor: iconStore.accentColors.isEmpty
                 ? iconStore.accentColor
@@ -177,7 +185,7 @@ struct NuvioGlassTabBar: View {
                 appCoordinator.requestTabBarVisible(true)
             }
         )
-        .frame(height: NuvioSegmentedTabBar.height(compact: isCompactHeight))
+        .frame(width: barWidth, height: NuvioSegmentedTabBar.height(compact: isBarCompact))
     }
 
     private func item(for tab: NuvioAppTab) -> some View {

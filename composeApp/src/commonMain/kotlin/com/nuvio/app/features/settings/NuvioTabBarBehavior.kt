@@ -3,6 +3,8 @@ package com.nuvio.app.features.settings
 import nuvio.composeapp.generated.resources.Res
 import nuvio.composeapp.generated.resources.settings_tab_bar_behavior_auto_hide
 import nuvio.composeapp.generated.resources.settings_tab_bar_behavior_auto_hide_description
+import nuvio.composeapp.generated.resources.settings_tab_bar_behavior_compact
+import nuvio.composeapp.generated.resources.settings_tab_bar_behavior_compact_description
 import nuvio.composeapp.generated.resources.settings_tab_bar_behavior_morphed
 import nuvio.composeapp.generated.resources.settings_tab_bar_behavior_morphed_description
 import nuvio.composeapp.generated.resources.settings_tab_bar_behavior_off
@@ -32,6 +34,11 @@ enum class NuvioTabBarBehavior(
         key = "static",
         labelRes = Res.string.settings_tab_bar_behavior_static,
         descriptionRes = Res.string.settings_tab_bar_behavior_static_description,
+    ),
+    COMPACT(
+        key = "compact",
+        labelRes = Res.string.settings_tab_bar_behavior_compact,
+        descriptionRes = Res.string.settings_tab_bar_behavior_compact_description,
     ),
     AUTO_HIDE(
         key = "auto_hide",
