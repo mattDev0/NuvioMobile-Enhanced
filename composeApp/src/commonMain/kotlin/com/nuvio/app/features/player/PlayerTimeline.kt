@@ -65,6 +65,7 @@ internal fun PlayerTimelineDetails(
     releaseInfo: String?,
     metrics: PlayerLayoutMetrics,
     badges: List<StreamBadge> = emptyList(),
+    streamTitle: String = "",
     modifier: Modifier = Modifier,
 ) {
     val typeScale = MaterialTheme.nuvioTypeScale
@@ -88,6 +89,18 @@ internal fun PlayerTimelineDetails(
                 style = typeScale.bodyMd.copy(fontSize = metrics.episodeInfoSize),
                 color = Color.White.copy(alpha = 0.9f),
                 maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        if (streamTitle.isNotBlank() && !streamTitle.equals(title.trim(), ignoreCase = true)) {
+            Text(
+                text = streamTitle,
+                style = typeScale.bodySm.copy(
+                    fontSize = metrics.metadataSize,
+                    lineHeight = metrics.metadataSize * 1.3f,
+                ),
+                color = Color.White.copy(alpha = 0.85f),
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
         }

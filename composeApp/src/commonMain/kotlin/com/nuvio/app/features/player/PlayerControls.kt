@@ -427,6 +427,7 @@ internal fun PlayerControlsShell(
                             releaseInfo = releaseInfo,
                             metrics = metrics,
                             badges = badges,
+                            streamTitle = streamTitle,
                         )
                     }
                     Row(
