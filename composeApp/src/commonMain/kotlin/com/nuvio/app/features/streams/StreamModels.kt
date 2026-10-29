@@ -37,6 +37,11 @@ data class StreamItem(
     val streamLabel: String
         get() = name?.takeIf { it.isNotBlank() } ?: "Stream"
 
+    val sourceHeadline: String
+        get() = streamLabel
+            .replace(Regex("[\\r\\n]+"), " ")
+            .trim()
+
     val streamSubtitle: String?
         get() = description
 

@@ -257,7 +257,7 @@ internal fun PlayerScreenRuntime.switchToP2pSourceStream(stream: StreamItem) {
     activeSourceFilename = stream.behaviorHints.filename
     activeTorrentTrackers = stream.p2pTrackers
     activeSourceIdentityKey = stream.playerSourceIdentityKey()
-    activeStreamTitle = stream.streamLabel
+    activeStreamTitle = stream.sourceHeadline
     activeStreamSubtitle = stream.streamSubtitle
     activeProviderName = stream.addonName
     activeProviderAddonId = stream.addonId
@@ -446,7 +446,7 @@ internal fun PlayerScreenRuntime.switchToSource(
     activeStreamType = stream.streamType
     activeSourceIdentityKey = sourceIdentityKey
     activeSourceFilename = stream.behaviorHints.filename
-    activeStreamTitle = stream.streamLabel
+    activeStreamTitle = stream.sourceHeadline
     activeStreamSubtitle = stream.streamSubtitle
     activeProviderName = stream.addonName
     activeProviderAddonId = stream.addonId
@@ -729,7 +729,7 @@ private fun PlayerScreenRuntime.applyEpisodeStreamMetadata(
 ) {
     activeSourceIdentityKey = stream.playerSourceIdentityKey()
     activeSourceFilename = stream.behaviorHints.filename
-    activeStreamTitle = stream.streamLabel
+    activeStreamTitle = stream.sourceHeadline
     activeStreamSubtitle = stream.streamSubtitle
     activeProviderName = stream.addonName
     activeProviderAddonId = stream.addonId

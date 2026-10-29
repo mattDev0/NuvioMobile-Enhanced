@@ -260,7 +260,7 @@ private fun StreamNameWithInstantService(
         null
     }
     val showInstantLabel = instantLabel != null
-    val visibleState = remember(stream.streamLabel) {
+    val visibleState = remember(stream.sourceHeadline) {
         MutableTransitionState(showInstantLabel)
     }
     visibleState.targetState = showInstantLabel
@@ -270,7 +270,7 @@ private fun StreamNameWithInstantService(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = stream.streamLabel,
+            text = stream.sourceHeadline,
             modifier = Modifier.weight(1f, fill = false),
             style = nameStyle,
             color = Color.White,

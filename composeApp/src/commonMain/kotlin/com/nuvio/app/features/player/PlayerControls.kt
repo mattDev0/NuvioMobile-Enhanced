@@ -586,20 +586,22 @@ private fun PlayerHeader(
                             overflow = TextOverflow.Ellipsis,
                         )
                     }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                    val showStreamTitle = streamTitle.isNotBlank() &&
+                        !streamTitle.equals(providerName.trim(), ignoreCase = true) &&
+                        !streamTitle.equals(title.trim(), ignoreCase = true)
+                    if (showStreamTitle) {
                         Text(
                             text = streamTitle,
-                            style = typeScale.labelSm.copy(
+                            style = typeScale.bodySm.copy(
                                 fontSize = metrics.metadataSize,
-                                lineHeight = metrics.metadataSize * 1.25f,
+                                lineHeight = metrics.metadataSize * 1.3f,
                             ),
-                            color = Color.White.copy(alpha = 0.7f),
-                            maxLines = 1,
+                            color = Color.White.copy(alpha = 0.85f),
+                            maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                         )
+                    }
+                    if (providerName.isNotBlank()) {
                         Text(
                             text = providerName,
                             style = typeScale.labelSm.copy(
