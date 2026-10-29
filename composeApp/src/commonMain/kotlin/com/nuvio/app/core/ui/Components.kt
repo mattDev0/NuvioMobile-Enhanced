@@ -372,7 +372,7 @@ fun NuvioPrimaryButton(
                 .fillMaxWidth()
                 .height(NuvioTokens.Space.s48 + NuvioTokens.Space.s4),
             enabled = enabled,
-            shape = ButtonDefaults.shapes(),
+            shapes = ButtonDefaults.shapes(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
