@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.sp
 import nuvio.composeapp.generated.resources.Res
 import nuvio.composeapp.generated.resources.jetbrains_sans_bold
 import nuvio.composeapp.generated.resources.jetbrains_sans_regular
@@ -123,6 +124,101 @@ private val NuvioTypography: Typography
             lineHeight = NuvioTokens.LineHeight.labelXs,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = NuvioTokens.LetterSpacing.label,
+        ),
+    )
+
+private val MaterialYouTypography: Typography
+    @Composable
+    get() = Typography(
+        displayLarge = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 57.sp,
+            lineHeight = 64.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+        displayMedium = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 45.sp,
+            lineHeight = 52.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+        displaySmall = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 36.sp,
+            lineHeight = 44.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+        headlineLarge = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 32.sp,
+            lineHeight = 40.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+        headlineMedium = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 28.sp,
+            lineHeight = 36.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+        headlineSmall = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 24.sp,
+            lineHeight = 32.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        titleLarge = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 22.sp,
+            lineHeight = 28.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        titleMedium = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        titleSmall = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        bodyLarge = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            fontWeight = FontWeight.Normal,
+        ),
+        bodyMedium = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            fontWeight = FontWeight.Normal,
+        ),
+        bodySmall = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            fontWeight = FontWeight.Normal,
+        ),
+        labelLarge = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        labelMedium = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        labelSmall = TextStyle(
+            fontFamily = JetBrainsSans,
+            fontSize = 11.sp,
+            lineHeight = 16.sp,
+            fontWeight = FontWeight.Medium,
         ),
     )
 
@@ -231,7 +327,7 @@ fun NuvioTheme(
         pal to scheme
     }
 
-    val tokens = defaultNuvioThemeTokens(palette, amoled = amoled, colorScheme = colorScheme)
+    val tokens = defaultNuvioThemeTokens(palette, amoled = amoled, colorScheme = colorScheme, materialYou = isMaterialYouActive)
 
     val density = LocalDensity.current
     CompositionLocalProvider(
@@ -250,7 +346,8 @@ fun NuvioTheme(
             MaterialExpressiveTheme(
                 colorScheme = colorScheme,
                 motionScheme = MotionScheme.expressive(),
-                typography = NuvioTypography,
+                shapes = MaterialYouExpressiveShapes,
+                typography = MaterialYouTypography,
             ) {
                 SkeletonAnimationProvider(content = content)
             }

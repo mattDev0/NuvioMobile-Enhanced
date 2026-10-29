@@ -45,7 +45,11 @@ import com.nuvio.app.core.ui.glass.isLiquidGlassSupported
 import com.nuvio.app.core.ui.glass.liquidGlassSurface
 import com.nuvio.app.core.ui.glass.nuvioBackdropSource
 
-private val SheetShape = RoundedCornerShape(NuvioTokens.Space.s28)
+private val DefaultSheetShape = RoundedCornerShape(NuvioTokens.Space.s28)
+private val MaterialYouSheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
+
+@Composable
+private fun sheetShape(): Shape = nuvioShape(DefaultSheetShape, MaterialYouSheetShape)
 
 // Keep the sheet background treatment consistent between the sheet and pinned content inside it.
 internal fun Modifier.nuvioSheetSurface(
@@ -122,6 +126,7 @@ fun NuvioModalBottomSheet(
             }
         }
         val sheetGlassReady = sheetBackdrop != null && sheetBackdrop.backdrop.isReady && isLiquidGlassSupported()
+        val currentSheetShape = sheetShape()
         ModalBottomSheet(
             onDismissRequest = onDismissRequest,
             sheetState = sheetState,
@@ -135,13 +140,13 @@ fun NuvioModalBottomSheet(
                 Column(
                     modifier = modifier
                         .padding(NuvioTokens.Space.s10)
-                        .clip(SheetShape)
+                        .clip(currentSheetShape)
                         .nuvioSheetSurface(
                             backdrop = sheetBackdrop?.backdrop,
-                            shape = SheetShape,
+                            shape = currentSheetShape,
                             containerColor = containerColor,
                         )
-                        .then(if (sheetGlassReady) Modifier else Modifier.border(tokens.borders.thin, SurfaceEdge, SheetShape)),
+                        .then(if (sheetGlassReady) Modifier else Modifier.border(tokens.borders.thin, SurfaceEdge, currentSheetShape)),
                 ) {
                     if (showDragHandle) {
                         NuvioBottomSheetDragHandle(Modifier.align(Alignment.CenterHorizontally))

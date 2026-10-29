@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun Chip(
@@ -25,7 +26,7 @@ fun Chip(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = RoundedCornerShape(NuvioTokens.Radius.md),
+        shape = nuvioShape(default = RoundedCornerShape(NuvioTokens.Radius.md), materialYou = RoundedCornerShape(12.dp)),
         color = if (selected) tokens.colors.overlaySelected else Color.Transparent,
         contentColor = when {
             !enabled -> tokens.colors.textDisabled

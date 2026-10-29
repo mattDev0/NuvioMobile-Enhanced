@@ -369,6 +369,7 @@ internal fun defaultNuvioThemeTokens(
     palette: ThemeColorPalette,
     amoled: Boolean,
     colorScheme: ColorScheme?,
+    materialYou: Boolean = false,
 ): NuvioThemeTokens {
     val background = if (amoled) Color.Black else palette.background
     val textPrimary = Color(0xFFF5F7F8)
@@ -442,17 +443,31 @@ internal fun defaultNuvioThemeTokens(
             sheetPadding = NuvioTokens.Space.s20,
             playerOverlayPadding = NuvioTokens.Space.s24,
         ),
-        shapes = NuvioShapeTokens(
-            card = RoundedCornerShape(NuvioTokens.Radius.card),
-            compactCard = RoundedCornerShape(NuvioTokens.Radius.compactCard),
-            sheet = RoundedCornerShape(NuvioTokens.Radius.sheet),
-            dialog = RoundedCornerShape(NuvioTokens.Radius.dialog),
-            button = RoundedCornerShape(NuvioTokens.Radius.button),
-            chip = RoundedCornerShape(NuvioTokens.Radius.chip),
-            poster = RoundedCornerShape(NuvioTokens.Radius.poster),
-            avatar = RoundedCornerShape(NuvioTokens.Radius.avatar),
-            playerPanel = RoundedCornerShape(NuvioTokens.Radius.playerPanel),
-        ),
+        shapes = if (materialYou) {
+            NuvioShapeTokens(
+                card = RoundedCornerShape(24.dp),
+                compactCard = RoundedCornerShape(16.dp),
+                sheet = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+                dialog = RoundedCornerShape(28.dp),
+                button = RoundedCornerShape(16.dp),
+                chip = RoundedCornerShape(12.dp),
+                poster = RoundedCornerShape(NuvioTokens.Radius.poster),
+                avatar = RoundedCornerShape(NuvioTokens.Radius.avatar),
+                playerPanel = RoundedCornerShape(NuvioTokens.Radius.playerPanel),
+            )
+        } else {
+            NuvioShapeTokens(
+                card = RoundedCornerShape(NuvioTokens.Radius.card),
+                compactCard = RoundedCornerShape(NuvioTokens.Radius.compactCard),
+                sheet = RoundedCornerShape(NuvioTokens.Radius.sheet),
+                dialog = RoundedCornerShape(NuvioTokens.Radius.dialog),
+                button = RoundedCornerShape(NuvioTokens.Radius.button),
+                chip = RoundedCornerShape(NuvioTokens.Radius.chip),
+                poster = RoundedCornerShape(NuvioTokens.Radius.poster),
+                avatar = RoundedCornerShape(NuvioTokens.Radius.avatar),
+                playerPanel = RoundedCornerShape(NuvioTokens.Radius.playerPanel),
+            )
+        },
         borders = NuvioBorderTokens(
             hairline = NuvioTokens.Border.hairline,
             thin = NuvioTokens.Border.thin,

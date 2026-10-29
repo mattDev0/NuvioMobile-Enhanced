@@ -200,7 +200,11 @@ fun NuvioScreenHeader(
                 ) { currentTitle ->
                     Text(
                         text = currentTitle,
-                        style = MaterialTheme.typography.displayLarge,
+                        style = if (LocalMaterialYou.current) {
+                            MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
+                        } else {
+                            MaterialTheme.typography.displayLarge
+                        },
                         color = tokens.colors.textPrimary,
                     )
                 }
@@ -219,13 +223,23 @@ fun NuvioSectionLabel(
     text: String,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = text,
-        modifier = modifier,
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.nuvio.colors.textMuted,
-        fontWeight = FontWeight.Bold,
-    )
+    if (LocalMaterialYou.current) {
+        Text(
+            text = text,
+            modifier = modifier,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold,
+        )
+    } else {
+        Text(
+            text = text,
+            modifier = modifier,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.nuvio.colors.textMuted,
+            fontWeight = FontWeight.Bold,
+        )
+    }
 }
 
 @Composable
@@ -362,7 +376,7 @@ fun NuvioInputField(
         onValueChange = onValueChange,
         modifier = modifier.fillMaxWidth(),
         singleLine = true,
-        shape = RoundedCornerShape(NuvioTokens.Radius.lg),
+        shape = nuvioShape(default = RoundedCornerShape(NuvioTokens.Radius.lg), materialYou = MaterialTheme.shapes.medium),
         placeholder = {
             Text(
                 text = placeholder,
@@ -516,7 +530,7 @@ fun NuvioToastHost(
             contentAlignment = Alignment.TopCenter,
         ) {
             Surface(
-                shape = RoundedCornerShape(NuvioTokens.Radius.xl),
+                shape = nuvioShape(default = RoundedCornerShape(NuvioTokens.Radius.xl), materialYou = RoundedCornerShape(12.dp)),
                 color = tokens.colors.surfacePopover,
                 tonalElevation = tokens.elevation.raised,
                 shadowElevation = tokens.elevation.overlay,
