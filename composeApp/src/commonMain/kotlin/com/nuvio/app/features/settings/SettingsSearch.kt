@@ -468,6 +468,15 @@ internal fun settingsSearchEntries(
         section = stringResource(Res.string.settings_advanced_section_startup),
         category = advancedCategory,
     )
+    addRow(
+        page = SettingsPage.Advanced,
+        key = "speed-test",
+        title = stringResource(Res.string.settings_speed_test_title),
+        description = stringResource(Res.string.settings_speed_test_description),
+        pageLabel = advancedPage,
+        section = stringResource(Res.string.settings_speed_test_title),
+        category = advancedCategory,
+    )
     if (SentrySettingsRepository.isSupported) {
         addRow(
             page = SettingsPage.Advanced,
