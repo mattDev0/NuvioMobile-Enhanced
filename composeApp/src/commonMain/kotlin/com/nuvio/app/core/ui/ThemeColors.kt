@@ -142,6 +142,82 @@ object ThemeColors {
         backgroundCard = Color(0xFF2A1714),
     )
 
+    val Sakura = ThemeColorPalette(
+        secondary = Color(0xFFF472B6),
+        secondaryVariant = Color(0xFFDB2777),
+        accentGradient = listOf(Color(0xFFF9A8D4), Color(0xFFF472B6), Color(0xFFDB2777)),
+        nativeAccentHex = "#F472B6",
+        onSecondary = Color(0xFF3B0A24),
+        focusRing = Color(0xFFF9A8D4),
+        focusBackground = Color(0xFF3A1428),
+        background = Color(0xFF120A0E),
+        backgroundElevated = Color(0xFF1F1218),
+        backgroundCard = Color(0xFF2B1A22),
+    )
+
+    val Sunset = ThemeColorPalette(
+        secondary = Color(0xFFF97316),
+        secondaryVariant = Color(0xFFEC4899),
+        accentGradient = listOf(Color(0xFFF97316), Color(0xFFEC4899), Color(0xFF8B5CF6)),
+        nativeAccentHex = "#F97316",
+        onSecondary = Color(0xFF2A0E02),
+        focusRing = Color(0xFFFDBA74),
+        focusBackground = Color(0xFF3A1C12),
+        background = Color(0xFF120A0C),
+        backgroundElevated = Color(0xFF201316),
+        backgroundCard = Color(0xFF2C1A1E),
+    )
+
+    val Neon = ThemeColorPalette(
+        secondary = Color(0xFFE879F9),
+        secondaryVariant = Color(0xFF22D3EE),
+        accentGradient = listOf(Color(0xFFFF2BD6), Color(0xFF7C3AED), Color(0xFF22D3EE)),
+        nativeAccentHex = "#E879F9",
+        onSecondary = Color(0xFF2A0530),
+        focusRing = Color(0xFFF0ABFC),
+        focusBackground = Color(0xFF2A1440),
+        background = Color(0xFF0A0612),
+        backgroundElevated = Color(0xFF150D22),
+        backgroundCard = Color(0xFF1F1430),
+    )
+
+    val Glacier = ThemeColorPalette(
+        secondary = Color(0xFF7DD3FC),
+        secondaryVariant = Color(0xFF38BDF8),
+        nativeAccentHex = "#7DD3FC",
+        onSecondary = Color(0xFF082F49),
+        focusRing = Color(0xFFBAE6FD),
+        focusBackground = Color(0xFF12303F),
+        background = Color(0xFF070D12),
+        backgroundElevated = Color(0xFF0F1A22),
+        backgroundCard = Color(0xFF16252F),
+    )
+
+    val Mocha = ThemeColorPalette(
+        secondary = Color(0xFFD4A373),
+        secondaryVariant = Color(0xFFA47148),
+        accentGradient = listOf(Color(0xFFE6CCB2), Color(0xFFD4A373), Color(0xFFA47148)),
+        nativeAccentHex = "#D4A373",
+        onSecondary = Color(0xFF2B1A0E),
+        focusRing = Color(0xFFE6CCB2),
+        focusBackground = Color(0xFF33251A),
+        background = Color(0xFF110D0A),
+        backgroundElevated = Color(0xFF1E1712),
+        backgroundCard = Color(0xFF2A2019),
+    )
+
+    val Matcha = ThemeColorPalette(
+        secondary = Color(0xFFA3E635),
+        secondaryVariant = Color(0xFF65A30D),
+        nativeAccentHex = "#A3E635",
+        onSecondary = Color(0xFF1A2E05),
+        focusRing = Color(0xFFBEF264),
+        focusBackground = Color(0xFF24300F),
+        background = Color(0xFF0A0F06),
+        backgroundElevated = Color(0xFF141C0D),
+        backgroundCard = Color(0xFF1E2914),
+    )
+
     val Crimson = ThemeColorPalette(
         secondary = Color(0xFFE53935),
         secondaryVariant = Color(0xFFC62828),
@@ -241,6 +317,12 @@ object ThemeColors {
         AppTheme.FOREST -> Forest
         AppTheme.NORTHERN_LIGHTS -> NorthernLights
         AppTheme.EMBER -> Ember
+        AppTheme.SAKURA -> Sakura
+        AppTheme.SUNSET -> Sunset
+        AppTheme.NEON -> Neon
+        AppTheme.GLACIER -> Glacier
+        AppTheme.MOCHA -> Mocha
+        AppTheme.MATCHA -> Matcha
         AppTheme.WHITE -> White
     }
 }

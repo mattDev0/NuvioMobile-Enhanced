@@ -1691,6 +1691,12 @@
     <string name="theme_forest">Forest</string>
     <string name="theme_northern_lights">Northern Lights</string>
     <string name="theme_ember">Ember</string>
+    <string name="theme_sakura">Sakura</string>
+    <string name="theme_sunset">Sunset</string>
+    <string name="theme_neon">Neon</string>
+    <string name="theme_glacier">Glacier</string>
+    <string name="theme_mocha">Mocha</string>
+    <string name="theme_matcha">Matcha</string>
     <string name="theme_custom">Custom</string>
     <string name="custom_theme_title">Your custom gradient</string>
     <string name="custom_theme_subtitle">Choose three colors for your theme. Select a color to edit it.</string>
