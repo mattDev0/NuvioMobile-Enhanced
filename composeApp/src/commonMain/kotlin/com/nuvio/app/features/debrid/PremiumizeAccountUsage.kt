@@ -6,6 +6,10 @@ import kotlin.math.roundToInt
 // Premiumize reports fair use as a 0..1 fraction of a rolling 30-day allowance of 1,000 points.
 internal const val PREMIUMIZE_FAIR_USE_POINTS = 1_000
 
+// One fair-use point covers about 1 GB at the base fair-use factor. Hosts with a higher
+// factor spend points faster, so these figures are estimates, not metered traffic.
+internal const val PREMIUMIZE_ESTIMATED_GB_PER_POINT = 1
+
 private const val SECONDS_PER_DAY = 86_400L
 
 data class PremiumizeAccountUsage(
@@ -24,6 +28,15 @@ data class PremiumizeAccountUsage(
 
     val fairUsePointsRemaining: Int
         get() = PREMIUMIZE_FAIR_USE_POINTS - fairUsePointsUsed
+
+    val estimatedTotalBandwidthGb: Int
+        get() = PREMIUMIZE_FAIR_USE_POINTS * PREMIUMIZE_ESTIMATED_GB_PER_POINT
+
+    val estimatedBandwidthUsedGb: Int
+        get() = fairUsePointsUsed * PREMIUMIZE_ESTIMATED_GB_PER_POINT
+
+    val estimatedBandwidthRemainingGb: Int
+        get() = fairUsePointsRemaining * PREMIUMIZE_ESTIMATED_GB_PER_POINT
 
     fun premiumDaysLeft(nowEpochMs: Long): Int? =
         premiumUntilEpochSeconds?.let { until ->

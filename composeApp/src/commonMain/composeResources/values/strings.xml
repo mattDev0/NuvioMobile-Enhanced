@@ -1069,6 +1069,10 @@
     <string name="settings_premiumize_usage_used">Usage</string>
     <string name="settings_premiumize_usage_points">%1$d points</string>
     <string name="settings_premiumize_usage_booster_points">Booster points</string>
+    <string name="settings_premiumize_usage_total_bandwidth">Total bandwidth</string>
+    <string name="settings_premiumize_usage_bandwidth_used">Bandwidth used</string>
+    <string name="settings_premiumize_usage_bandwidth_gb">≈ %1$d GB</string>
+    <string name="settings_premiumize_usage_bandwidth_note">Estimated at 1 point per GB. Some hosts use more points.</string>
     <string name="settings_premiumize_usage_premium_until">Premium until %1$s</string>
     <string name="settings_premiumize_usage_days_left">%1$d days left</string>
     <string name="settings_premiumize_usage_expired">No active premium plan.</string>
