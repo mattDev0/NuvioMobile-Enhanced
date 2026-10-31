@@ -28,6 +28,30 @@ internal enum class AppIconOption(
         key = "graphite",
         platformName = "AppIconGraphite",
     ),
+    ELECTRIC_VIOLET(
+        key = "electric_violet",
+        platformName = "AppIconElectricViolet",
+    ),
+    TURQUOISE(
+        key = "turquoise",
+        platformName = "AppIconTurquoise",
+    ),
+    SUNSET(
+        key = "sunset",
+        platformName = "AppIconSunset",
+    ),
+    MAGENTA_RUSH(
+        key = "magenta_rush",
+        platformName = "AppIconMagentaRush",
+    ),
+    CRIMSON(
+        key = "crimson",
+        platformName = "AppIconCrimson",
+    ),
+    SOLAR(
+        key = "solar",
+        platformName = "AppIconSolar",
+    ),
     ;
 
     companion object {

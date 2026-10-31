@@ -10,6 +10,12 @@ import nuvio.composeapp.generated.resources.theme_midnight
 import nuvio.composeapp.generated.resources.theme_forest
 import nuvio.composeapp.generated.resources.theme_northern_lights
 import nuvio.composeapp.generated.resources.theme_ember
+import nuvio.composeapp.generated.resources.theme_sakura
+import nuvio.composeapp.generated.resources.theme_sunset
+import nuvio.composeapp.generated.resources.theme_neon
+import nuvio.composeapp.generated.resources.theme_glacier
+import nuvio.composeapp.generated.resources.theme_mocha
+import nuvio.composeapp.generated.resources.theme_matcha
 import nuvio.composeapp.generated.resources.theme_violet
 import nuvio.composeapp.generated.resources.theme_white
 import nuvio.composeapp.generated.resources.theme_gold
@@ -37,6 +43,12 @@ enum class AppTheme {
     FOREST,
     NORTHERN_LIGHTS,
     EMBER,
+    SAKURA,
+    SUNSET,
+    NEON,
+    GLACIER,
+    MOCHA,
+    MATCHA,
     WHITE,
 }
 
@@ -58,5 +70,11 @@ val AppTheme.labelRes: StringResource
         AppTheme.FOREST -> Res.string.theme_forest
         AppTheme.NORTHERN_LIGHTS -> Res.string.theme_northern_lights
         AppTheme.EMBER -> Res.string.theme_ember
+        AppTheme.SAKURA -> Res.string.theme_sakura
+        AppTheme.SUNSET -> Res.string.theme_sunset
+        AppTheme.NEON -> Res.string.theme_neon
+        AppTheme.GLACIER -> Res.string.theme_glacier
+        AppTheme.MOCHA -> Res.string.theme_mocha
+        AppTheme.MATCHA -> Res.string.theme_matcha
         AppTheme.WHITE -> Res.string.theme_white
     }

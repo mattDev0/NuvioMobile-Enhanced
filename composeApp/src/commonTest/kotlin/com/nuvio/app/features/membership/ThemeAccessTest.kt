@@ -71,7 +71,18 @@ class ThemeAccessTest {
 
     @Test
     fun addedStandardThemesAreAvailableWithoutMembership() {
-        val newThemes = listOf(AppTheme.MIDNIGHT, AppTheme.FOREST, AppTheme.NORTHERN_LIGHTS, AppTheme.EMBER)
+        val newThemes = listOf(
+            AppTheme.MIDNIGHT,
+            AppTheme.FOREST,
+            AppTheme.NORTHERN_LIGHTS,
+            AppTheme.EMBER,
+            AppTheme.SAKURA,
+            AppTheme.SUNSET,
+            AppTheme.NEON,
+            AppTheme.GLACIER,
+            AppTheme.MOCHA,
+            AppTheme.MATCHA,
+        )
 
         newThemes.forEach { theme ->
             assertTrue(theme in availableAppThemes(CosmeticEntitlements.None))

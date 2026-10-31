@@ -18,6 +18,17 @@ class PremiumizeAccountUsageTest {
     }
 
     @Test
+    fun `estimates total used and remaining bandwidth from fair use points`() {
+        val usage = premiumizeAccountUsageFromDto(
+            PremiumizeAccountInfoDto(status = "success", limitUsed = 0.08),
+        )
+
+        assertEquals(1000, usage.estimatedTotalBandwidthGb)
+        assertEquals(80, usage.estimatedBandwidthUsedGb)
+        assertEquals(920, usage.estimatedBandwidthRemainingGb)
+    }
+
+    @Test
     fun `clamps out of range values`() {
         val over = premiumizeAccountUsageFromDto(PremiumizeAccountInfoDto(limitUsed = 1.4, boosterPoints = -2))
         val under = premiumizeAccountUsageFromDto(PremiumizeAccountInfoDto(limitUsed = -0.1))

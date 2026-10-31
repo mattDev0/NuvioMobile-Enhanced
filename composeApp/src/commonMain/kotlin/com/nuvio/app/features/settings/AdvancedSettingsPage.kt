@@ -125,6 +125,9 @@ internal fun LazyListScope.advancedSettingsContent(
             }
         }
     }
+    item(key = "speed_test") {
+        SpeedTestSection(isTablet = isTablet)
+    }
     if (SentrySettingsRepository.isSupported) {
         item {
             val sentryEnabledFlow = remember {

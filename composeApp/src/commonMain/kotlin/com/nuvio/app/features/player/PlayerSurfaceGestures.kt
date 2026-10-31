@@ -76,8 +76,6 @@ internal fun Modifier.playerSurfaceDragGestures(
         awaitEachGesture {
             val down = awaitFirstDown()
             if (playerControlsLockedState.value) {
-                // Keep locked-state touch events unconsumed so surface taps and the unlock
-                // button can still recognize clicks, including a small amount of finger drift.
                 return@awaitEachGesture
             }
             if (!touchGesturesEnabledState.value) {

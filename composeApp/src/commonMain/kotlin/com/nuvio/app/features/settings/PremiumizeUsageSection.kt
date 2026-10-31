@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.CloudDownload
+import androidx.compose.material.icons.rounded.DataUsage
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material3.Icon
@@ -45,6 +47,10 @@ import kotlin.math.roundToInt
 import nuvio.composeapp.generated.resources.Res
 import nuvio.composeapp.generated.resources.action_retry
 import nuvio.composeapp.generated.resources.settings_premiumize_usage_booster_points
+import nuvio.composeapp.generated.resources.settings_premiumize_usage_total_bandwidth
+import nuvio.composeapp.generated.resources.settings_premiumize_usage_bandwidth_used
+import nuvio.composeapp.generated.resources.settings_premiumize_usage_bandwidth_gb
+import nuvio.composeapp.generated.resources.settings_premiumize_usage_bandwidth_note
 import nuvio.composeapp.generated.resources.settings_premiumize_usage_days_left
 import nuvio.composeapp.generated.resources.settings_premiumize_usage_expired
 import nuvio.composeapp.generated.resources.settings_premiumize_usage_failed
@@ -196,6 +202,35 @@ private fun PremiumizeUsageContent(usage: PremiumizeAccountUsage) {
             value = usage.boosterPoints.toString(),
         )
     }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        PremiumizeStatTile(
+            modifier = Modifier.weight(1f),
+            icon = Icons.Rounded.CloudDownload,
+            label = stringResource(Res.string.settings_premiumize_usage_total_bandwidth),
+            value = stringResource(
+                Res.string.settings_premiumize_usage_bandwidth_gb,
+                usage.estimatedTotalBandwidthGb,
+            ),
+        )
+        PremiumizeStatTile(
+            modifier = Modifier.weight(1f),
+            icon = Icons.Rounded.DataUsage,
+            label = stringResource(Res.string.settings_premiumize_usage_bandwidth_used),
+            value = stringResource(
+                Res.string.settings_premiumize_usage_bandwidth_gb,
+                usage.estimatedBandwidthUsedGb,
+            ),
+        )
+    }
+    Text(
+        text = stringResource(Res.string.settings_premiumize_usage_bandwidth_note),
+        style = MaterialTheme.typography.bodySmall,
+        color = tokens.colors.textMuted,
+    )
 
     val premiumDate = usage.premiumUntilIsoDate()
     val daysLeft = usage.premiumDaysLeft(nowEpochMs = GMTDate().timestamp)

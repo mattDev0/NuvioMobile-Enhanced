@@ -13,6 +13,12 @@ internal val AppIconOption.labelResource: StringResource
         AppIconOption.ROSE_GOLD -> Res.string.settings_appearance_app_icon_rose_gold
         AppIconOption.COPPER -> Res.string.settings_appearance_app_icon_copper
         AppIconOption.GRAPHITE -> Res.string.settings_appearance_app_icon_graphite
+        AppIconOption.ELECTRIC_VIOLET -> Res.string.settings_appearance_app_icon_electric_violet
+        AppIconOption.TURQUOISE -> Res.string.settings_appearance_app_icon_turquoise
+        AppIconOption.SUNSET -> Res.string.settings_appearance_app_icon_sunset
+        AppIconOption.MAGENTA_RUSH -> Res.string.settings_appearance_app_icon_magenta_rush
+        AppIconOption.CRIMSON -> Res.string.settings_appearance_app_icon_crimson
+        AppIconOption.SOLAR -> Res.string.settings_appearance_app_icon_solar
     }
 
 internal val AppIconOption.previewResource: DrawableResource
@@ -23,6 +29,12 @@ internal val AppIconOption.previewResource: DrawableResource
         AppIconOption.ROSE_GOLD -> Res.drawable.app_icon_rose_gold
         AppIconOption.COPPER -> Res.drawable.app_icon_copper
         AppIconOption.GRAPHITE -> Res.drawable.app_icon_graphite
+        AppIconOption.ELECTRIC_VIOLET -> Res.drawable.app_icon_electric_violet
+        AppIconOption.TURQUOISE -> Res.drawable.app_icon_turquoise
+        AppIconOption.SUNSET -> Res.drawable.app_icon_sunset
+        AppIconOption.MAGENTA_RUSH -> Res.drawable.app_icon_magenta_rush
+        AppIconOption.CRIMSON -> Res.drawable.app_icon_crimson
+        AppIconOption.SOLAR -> Res.drawable.app_icon_solar
     }
 
 internal val AppIconOption.wordmarkResource: DrawableResource
@@ -33,6 +45,12 @@ internal val AppIconOption.wordmarkResource: DrawableResource
         AppIconOption.ROSE_GOLD -> Res.drawable.app_logo_wordmark_rose_gold
         AppIconOption.COPPER -> Res.drawable.app_logo_wordmark_copper
         AppIconOption.GRAPHITE -> Res.drawable.app_logo_wordmark_graphite
+        AppIconOption.ELECTRIC_VIOLET -> Res.drawable.app_logo_wordmark_electric_violet
+        AppIconOption.TURQUOISE -> Res.drawable.app_logo_wordmark_turquoise
+        AppIconOption.SUNSET -> Res.drawable.app_logo_wordmark_sunset
+        AppIconOption.MAGENTA_RUSH -> Res.drawable.app_logo_wordmark_magenta_rush
+        AppIconOption.CRIMSON -> Res.drawable.app_logo_wordmark_crimson
+        AppIconOption.SOLAR -> Res.drawable.app_logo_wordmark_solar
     }
 
 internal fun AppTheme.wordmarkResource(fallback: AppIconOption): DrawableResource =
