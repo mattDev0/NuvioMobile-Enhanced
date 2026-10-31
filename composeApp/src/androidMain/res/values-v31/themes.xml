@@ -29,4 +29,28 @@
     <style name="Theme.Nuvio.Splash.Graphite" parent="@style/Theme.Nuvio.Splash">
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo_graphite</item>
     </style>
+
+    <style name="Theme.Nuvio.Splash.ElectricViolet" parent="@style/Theme.Nuvio.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo_electric_violet</item>
+    </style>
+
+    <style name="Theme.Nuvio.Splash.Turquoise" parent="@style/Theme.Nuvio.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo_turquoise</item>
+    </style>
+
+    <style name="Theme.Nuvio.Splash.Sunset" parent="@style/Theme.Nuvio.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo_sunset</item>
+    </style>
+
+    <style name="Theme.Nuvio.Splash.MagentaRush" parent="@style/Theme.Nuvio.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo_magenta_rush</item>
+    </style>
+
+    <style name="Theme.Nuvio.Splash.Crimson" parent="@style/Theme.Nuvio.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo_crimson</item>
+    </style>
+
+    <style name="Theme.Nuvio.Splash.Solar" parent="@style/Theme.Nuvio.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo_solar</item>
+    </style>
 </resources>

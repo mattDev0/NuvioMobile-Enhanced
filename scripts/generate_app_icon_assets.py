@@ -51,6 +51,12 @@ SHORTLIST_KEYS = {
     "rose_gold",
     "copper",
     "graphite",
+    "electric_violet",
+    "turquoise",
+    "sunset",
+    "magenta_rush",
+    "crimson",
+    "solar",
 }
 
 VARIANTS = [variant for variant in ALL_VARIANTS if variant[0] in SHORTLIST_KEYS]

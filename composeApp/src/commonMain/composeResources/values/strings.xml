@@ -756,6 +756,12 @@
     <string name="settings_appearance_app_icon_graphite">Graphite</string>
     <string name="settings_appearance_app_icon_original">Original</string>
     <string name="settings_appearance_app_icon_rose_gold">Rose Gold</string>
+    <string name="settings_appearance_app_icon_electric_violet">Electric Violet</string>
+    <string name="settings_appearance_app_icon_turquoise">Turquoise</string>
+    <string name="settings_appearance_app_icon_sunset">Sunset</string>
+    <string name="settings_appearance_app_icon_magenta_rush">Magenta Rush</string>
+    <string name="settings_appearance_app_icon_crimson">Crimson</string>
+    <string name="settings_appearance_app_icon_solar">Solar</string>
     <string name="settings_appearance_app_icon_sheet_title">Choose App Icon</string>
     <string name="settings_appearance_app_language">App Language</string>
     <string name="settings_appearance_app_language_device">Device language</string>

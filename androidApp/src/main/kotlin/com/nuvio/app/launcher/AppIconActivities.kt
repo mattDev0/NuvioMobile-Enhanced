@@ -13,3 +13,15 @@ class AppIconRoseGold : MainActivity()
 class AppIconCopper : MainActivity()
 
 class AppIconGraphite : MainActivity()
+
+class AppIconElectricViolet : MainActivity()
+
+class AppIconTurquoise : MainActivity()
+
+class AppIconSunset : MainActivity()
+
+class AppIconMagentaRush : MainActivity()
+
+class AppIconCrimson : MainActivity()
+
+class AppIconSolar : MainActivity()
